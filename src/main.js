@@ -371,20 +371,20 @@ function liquidityCatAmountInputHandler(event) {
 function initialize() {
 
   // Initialize the balances and prices
-  aliceDogTokenBalance.innerHTML = '100';
-  aliceCatTokenBalance.innerHTML = '200';
+  aliceDogTokenBalance.innerHTML = '0';
+  aliceCatTokenBalance.innerHTML = '0';
   aliceShareOfLiquidityPool.innerHTML = '0';
-  bobDogTokenBalance.innerHTML = '150';
-  bobCatTokenBalance.innerHTML = '250';
+  bobDogTokenBalance.innerHTML = '0';
+  bobCatTokenBalance.innerHTML = '0';
   bobShareOfLiquidityPool.innerHTML = '0';
-  carolDogTokenBalance.innerHTML = '1100000';
-  carolCatTokenBalance.innerHTML = '1100000';
+  carolDogTokenBalance.innerHTML = '0';
+  carolCatTokenBalance.innerHTML = '0';
   carolShareOfLiquidityPool.innerHTML = '0';
-  daveDogTokenBalance.innerHTML = '1000';
-  daveCatTokenBalance.innerHTML = '1000';
-  daveShareOfLiquidityPool.innerHTML = '100';
-  dexDogTokenBalance.innerHTML = '100';
-  dexCatTokenBalance.innerHTML = '300';
+  daveDogTokenBalance.innerHTML = '0';
+  daveCatTokenBalance.innerHTML = '0';
+  daveShareOfLiquidityPool.innerHTML = '0';
+  dexDogTokenBalance.innerHTML = '0';
+  dexCatTokenBalance.innerHTML = '0';
   relativePriceDogTokenInCatToken.innerHTML = '1';
   relativePriceCatTokenInDogToken.innerHTML = '1';
   coinbaseDogTokenPriceInput.value = '1';
