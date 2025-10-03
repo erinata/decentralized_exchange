@@ -5,8 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/impermanent_loss/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>impermanent_loss</title>
-    <script type="module" crossorigin src="/impermanent_loss/assets/index-CqBCRhTJ.js"></script>
-    <link rel="stylesheet" crossorigin href="/impermanent_loss/assets/index-CD2sNRhe.css">
+    <script type="module" crossorigin src="/impermanent_loss/assets/index-CQ14XIYp.js"></script>
+    <link rel="stylesheet" crossorigin href="/impermanent_loss/assets/index-Cy6CSjPS.css">
   </head>
   <body>
       <div id="app">
@@ -31,28 +31,98 @@
           <div>Coinbase Price of CatToken in USD: <span id="coinbaseCatTokenPrice">1</span></div>
           
           <!-- a button to activate the function aliceSellOneDogToken() -->
-          <button id="aliceSellOneDogTokenButton" type="button">Alice Sell 1 DogToken</button>
+          <!-- <button id="aliceSellOneDogTokenButton" type="button">Alice Sell 1 DogToken</button>
           <button id="aliceBuyOneDogTokenButton" type="button">Alice Buy 1 DogToken</button>
           <button id="bobSellOneCatTokenButton" type="button">Bob Sell 1 CatToken</button>
-          <button id="bobBuyOneCatTokenButton" type="button">Bob Buy 1 CatToken</button>
+          <button id="bobBuyOneCatTokenButton" type="button">Bob Buy 1 CatToken</button> -->
+          
+          <!-- make dropdown boxes for people to choose the user, the action , the token and the amount -->
+          <div>
+            <label for="executeUserSelect">User:</label>
+            <select id="executeUserSelect">
+              <option value="alice">Alice</option>
+              <option value="bob">Bob</option>
+              <option value="carol">Carol</option>
+              <option value="dave">Dave</option>
+            </select>
+
+            <label for="executeActionSelect">Action:</label>
+            <select id="executeActionSelect">
+              <option value="buy">Buy</option>
+              <option value="sell">Sell</option>
+            </select>
+
+            <label for="executeTokenSelect">Token:</label>
+            <select id="executeTokenSelect">
+              <option value="dogToken">DogToken</option>
+              <option value="catToken">CatToken</option>
+            </select>
+
+            <label for="executeAmountInput">Amount:</label>
+            <input type="number" id="executeAmountInput" value="1" min="1" />
+
+            <button id="executeTradeButton" type="button">Execute Trade</button>
+            <br/>
+
+            <label for="liquidityUserSelect">User:</label>
+            <select id="liquidityUserSelect">
+              <option value="alice">Alice</option>
+              <option value="bob">Bob</option>
+              <option value="carol">Carol</option>
+              <option value="dave">Dave</option>
+            </select>
+            
+            
+            <label for="liquidityAmountInput">Amount:</label>
+            <input type="number" id="liquidityDogAmountInput"/> DogToken
+            <input type="number" id="liquidityCatAmountInput"/> CatToken
+            
+            <button id="depositLiquidityButton" type="button">Deposit Liquidity</button>
+            <button id="withdrawLiquidityButton" type="button">Withdraw All Liquidity</button>
+            
+            <br/>
+            
+            <!-- button for coinbase arbitrage kicks in -->
+            <button id="coinbaseArbitrageButton" type="button">Coinbase Arbitrage (Infinite Steps)</button>
+            <!-- button for coinbase arbitrage just one step -->
+            <button id="coinbaseArbitrageOneStepButton" type="button">Coinbase Arbitrage (One Step)</button>
+            <br/>
+            <!-- inputbox for coinbase dogtoken price in usd  -->
+            <label for="coinbaseDogTokenPriceInput">Coinbase DogToken Price in USD:</label>
+            <input type="number" id="coinbaseDogTokenPriceInput" value="1" min="0.01" step="0.01"/>
+            <label for="coinbaseCatTokenPriceInput">Coinbase CatToken Price in USD:</label>
+            <input type="number" id="coinbaseCatTokenPriceInput" value="1" min="0.01" step="0.01"/>
+          
+            <br/>
+            <!-- dropdown box to choose user, token, and amount to airdrop -->
+            <label for="airdropUserSelect">Airdrop User:</label>
+            <select id="airdropUserSelect">
+              <option value="alice">Alice</option>
+              <option value="bob">Bob</option>
+              <option value="carol">Carol</option>
+              <option value="dave">Dave</option>
+            </select>
+            
+            <label for="airdropTokenSelect">Airdrop Token:</label>
+            <select id="airdropTokenSelect">
+              <option value="dogToken">DogToken</option>
+              <option value="catToken">CatToken</option>
+            </select>
+            
+            <label for="airdropAmountInput">Airdrop Amount:</label>
+            <input type="number" id="airdropAmountInput"/>
+            <button id="airdropButton" type="button">Airdrop Tokens</button>
           
           
-          
-          
-          
-          
-          <!-- <a href="https://vite.dev" target="_blank">
-            <img src='/vite.svg' class="logo" alt="Vite logo" />
-          </a> -->
-          <!-- h1 class="text-3xl font-bold underline text-blue-500">
-              Hello world!
-          </h1> -->
-          <!-- <div class="card">
-            <button id="counter" type="button"></button>
+
+            
           </div>
-          <p class="read-the-docs">
-            Click on the Vite logo to learn more
-          </p> -->
+          
+          
+          
+          
+          
+          
         </div>
       </div>
   </body>
