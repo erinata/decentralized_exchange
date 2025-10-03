@@ -54,7 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
   withdrawLiquidityButton.addEventListener('click', withdrawLiquidityButtonHandler);
   
   const coinbaseArbitrageButton = document.getElementById('coinbaseArbitrageButton');
-  coinbaseArbitrageButton.addEventListener('click', coinbaseArbitrageButtonHandler);
+  coinbaseArbitrageButton.addEventListener('click', () => coinbaseArbitrageButtonHandler());
+  
+  const coinbaseArbitrageOneStepButton = document.getElementById('coinbaseArbitrageOneStepButton');
+  coinbaseArbitrageOneStepButton.addEventListener('click', () => coinbaseArbitrageButtonHandler(1));
 
 
   initialize();
@@ -63,8 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+  
 
-function coinbaseArbitrageButtonHandler() {
+function coinbaseArbitrageButtonHandler(remainingSteps = Infinity) {
   // get the prices from coinbaseDogTokenPrice and coinbaseCatTokenPrice
   const coinbaseDogPrice = parseFloat(coinbaseDogTokenPrice.innerHTML);
   const coinbaseCatPrice = parseFloat(coinbaseCatTokenPrice.innerHTML);
@@ -86,7 +90,7 @@ function coinbaseArbitrageButtonHandler() {
     let dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
     let dogTokensBought = 0;
     let catTokensSpent = 0;
-    while (coinbasePriceRatio > (dexCatBalance / dexDogBalance)) {
+    while ((coinbasePriceRatio > (dexCatBalance / dexDogBalance)) && remainingSteps > 0) {
       // buy 1 dog token at a time
       const catTokensNeeded = (1 * dexCatBalance) / (dexDogBalance - 1);
       if (dexDogBalance < 1 || dexCatBalance < catTokensNeeded) {
@@ -96,6 +100,7 @@ function coinbaseArbitrageButtonHandler() {
       catTokensSpent += catTokensNeeded;
       dexDogBalance -= 1;
       dexCatBalance += catTokensNeeded;
+      remainingSteps -= 1;
     }
     if (dogTokensBought > 0) {
       console.log(`Bought ${dogTokensBought} Dog Tokens on DEX for ${catTokensSpent} Cat Tokens`);
@@ -112,7 +117,7 @@ function coinbaseArbitrageButtonHandler() {
     let dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
     let catTokensBought = 0;
     let dogTokensSpent = 0;
-    while (coinbasePriceRatio < (dexCatBalance / dexDogBalance)) {
+    while ((coinbasePriceRatio < (dexCatBalance / dexDogBalance)) && remainingSteps > 0) {
       // buy 1 cat token at a time
       const dogTokensNeeded = (1 * dexDogBalance) / (dexCatBalance - 1);
       if (dexCatBalance < 1 || dexDogBalance < dogTokensNeeded) {
@@ -122,6 +127,7 @@ function coinbaseArbitrageButtonHandler() {
       dogTokensSpent += dogTokensNeeded;
       dexCatBalance -= 1;
       dexDogBalance += dogTokensNeeded;
+      remainingSteps -= 1;
     }
     if (catTokensBought > 0) {
       console.log(`Bought ${catTokensBought} Cat Tokens on DEX for ${dogTokensSpent} Dog Tokens`);
