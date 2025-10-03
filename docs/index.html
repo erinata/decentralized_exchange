@@ -5,24 +5,54 @@
     <link rel="icon" type="image/svg+xml" href="/impermanent_loss/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>impermanent_loss</title>
-    <script type="module" crossorigin src="/impermanent_loss/assets/index-BoRks_x2.js"></script>
-    <link rel="stylesheet" crossorigin href="/impermanent_loss/assets/index-BCOVc_5M.css">
+    <script type="module" crossorigin src="/impermanent_loss/assets/index-CqBCRhTJ.js"></script>
+    <link rel="stylesheet" crossorigin href="/impermanent_loss/assets/index-CD2sNRhe.css">
   </head>
   <body>
       <div id="app">
         <div>
-          <a href="https://vite.dev" target="_blank">
-            <img src='/impermanent_loss/vite.svg' class="logo" alt="Vite logo" />
-          </a>
-           <h1 class="text-3xl font-bold underline text-blue-500">
+          <div>Alice DogToken Balance: <span id="aliceDogTokenBalance">0</span></div>
+          <div>Alice CatToken Balance: <span id="aliceCatTokenBalance">0</span></div>
+          <div>Alice Share of Liquidity Pool: <span id="aliceShareOfLiquidityPool">0</span></div>
+          <div>Bob DogToken Balance: <span id="bobDogTokenBalance">0</span></div>
+          <div>Bob CatToken Balance: <span id="bobCatTokenBalance">0</span></div>
+          <div>Bob Share of Liquidity Pool: <span id="bobShareOfLiquidityPool">0</span></div>
+          <div>Carol DogToken Balance: <span id="carolDogTokenBalance">0</span></div>
+          <div>Carol CatToken Balance: <span id="carolCatTokenBalance">0</span></div>
+          <div>Carol Share of Liquidity Pool: <span id="carolShareOfLiquidityPool">0</span></div>
+          <div>Dave DogToken Balance: <span id="daveDogTokenBalance">0</span></div>
+          <div>Dave CatToken Balance: <span id="daveCatTokenBalance">0</span></div>
+          <div>Dave Share of Liquidity Pool: <span id="daveShareOfLiquidityPool">0</span></div>
+          <div>Dex Contract DogToken Balance: <span id="dexDogTokenBalance">0</span></div>
+          <div>Dex Contract CatToken Balance: <span id="dexCatTokenBalance">0</span></div>
+          <div>Relative Price of DogToken in CatToken: <span id="relativePriceDogTokenInCatToken">1</span></div>
+          <div>Relative Price of CatToken in DogToken: <span id="relativePriceCatTokenInDogToken">1</span></div>
+          <div>Coinbase Price of DogToken in USD: <span id="coinbaseDogTokenPrice">1</span></div>
+          <div>Coinbase Price of CatToken in USD: <span id="coinbaseCatTokenPrice">1</span></div>
+          
+          <!-- a button to activate the function aliceSellOneDogToken() -->
+          <button id="aliceSellOneDogTokenButton" type="button">Alice Sell 1 DogToken</button>
+          <button id="aliceBuyOneDogTokenButton" type="button">Alice Buy 1 DogToken</button>
+          <button id="bobSellOneCatTokenButton" type="button">Bob Sell 1 CatToken</button>
+          <button id="bobBuyOneCatTokenButton" type="button">Bob Buy 1 CatToken</button>
+          
+          
+          
+          
+          
+          
+          <!-- <a href="https://vite.dev" target="_blank">
+            <img src='/vite.svg' class="logo" alt="Vite logo" />
+          </a> -->
+          <!-- h1 class="text-3xl font-bold underline text-blue-500">
               Hello world!
-            </h1>
-          <div class="card">
+          </h1> -->
+          <!-- <div class="card">
             <button id="counter" type="button"></button>
           </div>
           <p class="read-the-docs">
             Click on the Vite logo to learn more
-          </p>
+          </p> -->
         </div>
       </div>
   </body>
