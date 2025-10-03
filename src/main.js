@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const dexCatTokenBalance = document.getElementById('dexCatTokenBalance');
   const relativePriceDogTokenInCatToken = document.getElementById('relativePriceDogTokenInCatToken');
   const relativePriceCatTokenInDogToken = document.getElementById('relativePriceCatTokenInDogToken');
-  const coinbaseDogTokenPrice = document.getElementById('coinbaseDogTokenPrice');
-  const coinbaseCatTokenPrice = document.getElementById('coinbaseCatTokenPrice');
+  // const coinbaseDogTokenPrice = document.getElementById('coinbaseDogTokenPrice');
+  // const coinbaseCatTokenPrice = document.getElementById('coinbaseCatTokenPrice');
   // const aliceSellOneDogTokenButton = document.getElementById('aliceSellOneDogTokenButton');
   // aliceSellOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'sell', 1));
   // const aliceBuyOneDogTokenButton = document.getElementById('aliceBuyOneDogTokenButton');
@@ -60,19 +60,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const coinbaseArbitrageOneStepButton = document.getElementById('coinbaseArbitrageOneStepButton');
   coinbaseArbitrageOneStepButton.addEventListener('click', () => coinbaseArbitrageButtonHandler(1));
 
+  const coinbaseDogTokenPriceInput = document.getElementById('coinbaseDogTokenPriceInput');
+  const coinbaseCatTokenPriceInput = document.getElementById('coinbaseCatTokenPriceInput');
+
+  const airdropUserSelect = document.getElementById('airdropUserSelect');
+  const airdropTokenSelect = document.getElementById('airdropTokenSelect');
+  const airdropAmountInput = document.getElementById('airdropAmountInput');
+  const airdropButton = document.getElementById('airdropButton');
+  airdropButton.addEventListener('click', airdropButtonHandler);
 
   initialize();
   updateRelativePrice();
 });
 
 
-
+function airdropButtonHandler() {
+  const user = airdropUserSelect.value;
+  const tokenType = airdropTokenSelect.value;
+  const amount = parseFloat(airdropAmountInput.value);
+  if (isNaN(amount) || amount <= 0) {
+    alert('Please enter a valid amount greater than 0.');
+    return;
+  }
+  console.log(`Airdropping ${amount} of ${tokenType} Token to ${user}`);
+  // lowercase user for element IDs
+  const userLower = user.toLowerCase();
+  const userDogBalance = parseFloat(document.getElementById(`${userLower}DogTokenBalance`).innerHTML);
+  const userCatBalance = parseFloat(document.getElementById(`${userLower}CatTokenBalance`).innerHTML);
+  if (tokenType === 'dogToken') {
+    document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance + amount);
+  } else if (tokenType === 'catToken') {
+    document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + amount);
+  }
+}
   
 
 function coinbaseArbitrageButtonHandler(remainingSteps = Infinity) {
-  // get the prices from coinbaseDogTokenPrice and coinbaseCatTokenPrice
-  const coinbaseDogPrice = parseFloat(coinbaseDogTokenPrice.innerHTML);
-  const coinbaseCatPrice = parseFloat(coinbaseCatTokenPrice.innerHTML);
+  const coinbaseDogPrice = parseFloat(coinbaseDogTokenPriceInput.value);
+  const coinbaseCatPrice = parseFloat(coinbaseCatTokenPriceInput.value);
   // get coinbase price ratio
   const coinbasePriceRatio =  coinbaseDogPrice/coinbaseCatPrice;
   
@@ -362,8 +387,8 @@ function initialize() {
   dexCatTokenBalance.innerHTML = '300';
   relativePriceDogTokenInCatToken.innerHTML = '1';
   relativePriceCatTokenInDogToken.innerHTML = '1';
-  coinbaseDogTokenPrice.innerHTML = '1';
-  coinbaseCatTokenPrice.innerHTML = '1';
+  coinbaseDogTokenPriceInput.value = '1';
+  coinbaseCatTokenPriceInput.value = '1';
   
 }
 
