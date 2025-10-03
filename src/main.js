@@ -25,25 +25,119 @@ document.addEventListener('DOMContentLoaded', () => {
   const relativePriceCatTokenInDogToken = document.getElementById('relativePriceCatTokenInDogToken');
   const coinbaseDogTokenPrice = document.getElementById('coinbaseDogTokenPrice');
   const coinbaseCatTokenPrice = document.getElementById('coinbaseCatTokenPrice');
-  const aliceSellOneDogTokenButton = document.getElementById('aliceSellOneDogTokenButton');
-  aliceSellOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'sell', 1));
-  const aliceBuyOneDogTokenButton = document.getElementById('aliceBuyOneDogTokenButton');
-  aliceBuyOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'buy', 1));
-  const bobSellOneCatTokenButton = document.getElementById('bobSellOneCatTokenButton');
-  bobSellOneCatTokenButton.addEventListener('click',  () => tradeTokenAmount('bob', 'Cat', 'sell', 1));
-  const bobBuyOneCatTokenButton = document.getElementById('bobBuyOneCatTokenButton');
-  bobBuyOneCatTokenButton.addEventListener('click', () => tradeTokenAmount('bob', 'Cat', 'buy', 1));
+  // const aliceSellOneDogTokenButton = document.getElementById('aliceSellOneDogTokenButton');
+  // aliceSellOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'sell', 1));
+  // const aliceBuyOneDogTokenButton = document.getElementById('aliceBuyOneDogTokenButton');
+  // aliceBuyOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'buy', 1));
+  // const bobSellOneCatTokenButton = document.getElementById('bobSellOneCatTokenButton');
+  // bobSellOneCatTokenButton.addEventListener('click',  () => tradeTokenAmount('bob', 'Cat', 'sell', 1));
+  // const bobBuyOneCatTokenButton = document.getElementById('bobBuyOneCatTokenButton');
+  // bobBuyOneCatTokenButton.addEventListener('click', () => tradeTokenAmount('bob', 'Cat', 'buy', 1));
   const executeTradeButton = document.getElementById('executeTradeButton');
   executeTradeButton.addEventListener('click', executeTradeButtonHandler);
-
-  const userSelect = document.getElementById('userSelect');
-  const actionSelect = document.getElementById('actionSelect');
-  const tokenSelect = document.getElementById('tokenSelect');
-  const amountInput = document.getElementById('amountInput');
+  const executeUserSelect = document.getElementById('executeUserSelect');
+  const executeActionSelect = document.getElementById('executeActionSelect');
+  const executeTokenSelect = document.getElementById('executeTokenSelect');
+  const executeAmountInput = document.getElementById('executeAmountInput');
   
+  const liquidityCatTokenAmountDisplay = document.getElementById('liquidityCatTokenAmountDisplay');
+  const liquidityAmountInput = document.getElementById('liquidityAmountInput');
+  // add event listener to repond to liquidityAmountInput value changes
+  liquidityAmountInput.addEventListener('input', (event) => liquidityAmountInputHandler(event));
+  
+  const liquidityUserSelect = document.getElementById('liquidityUserSelect');
+  
+  const depositLiquidityButton = document.getElementById('depositLiquidityButton');
+  const withdrawLiquidityButton = document.getElementById('withdrawLiquidityButton');
+  
+  depositLiquidityButton.addEventListener('click', depositLiquidityButtonHandler);
+  withdrawLiquidityButton.addEventListener('click', withdrawLiquidityButtonHandler);
+
+
   initialize();
   updateRelativePrice();
 });
+
+// write the function for the liquidityAmountInput event listener
+
+function depositLiquidityButtonHandler () {
+  // get the user from the liquidityUserSelect
+  const user = liquidityUserSelect.value;
+  const dogTokenAmount = parseFloat(liquidityAmountInput.value);
+  const catTokenAmount = parseFloat(liquidityCatTokenAmountDisplay.innerHTML);
+  if (isNaN(dogTokenAmount) || dogTokenAmount <= 0 || isNaN(catTokenAmount) || catTokenAmount <= 0) {
+    alert('Please enter a valid Token amount greater than 0.');
+    return;
+  }
+  console.log(`Depositing liquidity: ${user} wants to deposit ${dogTokenAmount} Dog Tokens and ${catTokenAmount} Cat Tokens`);
+  // lowercase user for element IDs
+  const userLower = user.toLowerCase();
+  const userDogBalance = parseFloat(document.getElementById(`${userLower}DogTokenBalance`).innerHTML);
+  const userCatBalance = parseFloat(document.getElementById(`${userLower}CatTokenBalance`).innerHTML);
+  const userShareOfLiquidityPool = parseFloat(document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML);
+  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+  const dexTotalLiquidity = dexDogBalance + dexCatBalance;
+  if (userDogBalance < dogTokenAmount) {
+    alert(`${user} does not have enough Dog Tokens to deposit.`);
+    return;
+  }
+  if (userCatBalance < catTokenAmount) {
+    alert(`${user} does not have enough Cat Tokens to deposit.`);
+    return;
+  }
+  
+  // Calculate the share of the liquidity pool to be given to the user and update liquidity share for all users
+  const liquidityAdded = dogTokenAmount + catTokenAmount;
+  const userNewShare = (liquidityAdded / (dexTotalLiquidity + liquidityAdded)) * 100;
+  document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(userShareOfLiquidityPool + userNewShare);
+  //  update other users' share of liquidity pool
+  
+  const users = ['alice', 'bob', 'carol', 'dave'];
+  users.forEach(u => {
+    if (u !== userLower) {
+      const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
+      const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / (dexTotalLiquidity + liquidityAdded);
+      document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+    }
+  });
+    
+  
+  
+  // Update user balances
+  document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance - dogTokenAmount);
+  document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance - catTokenAmount);
+  // Update DEX balances
+  dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + dogTokenAmount);
+  dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + catTokenAmount);
+  
+  updateRelativePrice();
+  
+  
+  
+}
+
+function withdrawLiquidityButtonHandler () {
+}
+
+
+
+function liquidityAmountInputHandler(event) {
+  const value = event.target.value;
+  if (isNaN(value) || value <= 0) {
+    event.target.value = '';
+    return;
+  } else {
+    // calculate the equivalent Dog and Cat token amounts based on current DEX balances
+    //  restricting the d```og token amount is the same as the value
+    const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+    const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+    const catTokenAmount = (parseFloat(value) * dexCatBalance) / dexDogBalance;
+    liquidityCatTokenAmountDisplay.innerHTML = cleanUpNumbers(catTokenAmount);
+    
+  }
+  
+}
 
 
 
@@ -63,7 +157,7 @@ function initialize() {
   daveCatTokenBalance.innerHTML = '1000';
   daveShareOfLiquidityPool.innerHTML = '100';
   dexDogTokenBalance.innerHTML = '1000';
-  dexCatTokenBalance.innerHTML = '1000';
+  dexCatTokenBalance.innerHTML = '2000';
   relativePriceDogTokenInCatToken.innerHTML = '1';
   relativePriceCatTokenInDogToken.innerHTML = '1';
   coinbaseDogTokenPrice.innerHTML = '1';
