@@ -52,13 +52,98 @@ document.addEventListener('DOMContentLoaded', () => {
   
   depositLiquidityButton.addEventListener('click', depositLiquidityButtonHandler);
   withdrawLiquidityButton.addEventListener('click', withdrawLiquidityButtonHandler);
+  
+  const coinbaseArbitrageButton = document.getElementById('coinbaseArbitrageButton');
+  coinbaseArbitrageButton.addEventListener('click', coinbaseArbitrageButtonHandler);
 
 
   initialize();
   updateRelativePrice();
 });
 
-// write the function for the liquidityAmountInput event listener
+
+
+
+function coinbaseArbitrageButtonHandler() {
+  // get the prices from coinbaseDogTokenPrice and coinbaseCatTokenPrice
+  const coinbaseDogPrice = parseFloat(coinbaseDogTokenPrice.innerHTML);
+  const coinbaseCatPrice = parseFloat(coinbaseCatTokenPrice.innerHTML);
+  // get coinbase price ratio
+  const coinbasePriceRatio =  coinbaseDogPrice/coinbaseCatPrice;
+  
+  const dexDogPrice = parseFloat(relativePriceDogTokenInCatToken.innerHTML);
+  
+  // if coinbase price ratio is greater than dex price, buy dog token on dex and sell on coinbase until prices are not favorable
+  //  else if coinbase price ratio is less than dex price, buy cat token on dex and sell on coinbase until prices are not favorable
+  
+  // add tolerance for floating point precision issues
+  const tolerance = 0.01;
+  
+  if (coinbasePriceRatio > dexDogPrice + tolerance) {
+    console.log('Arbitrage opportunity: Buy Dog Token on DEX and sell on Coinbase');
+    // buy dog token on dex
+    let dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+    let dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+    let dogTokensBought = 0;
+    let catTokensSpent = 0;
+    while (coinbasePriceRatio > (dexCatBalance / dexDogBalance)) {
+      // buy 1 dog token at a time
+      const catTokensNeeded = (1 * dexCatBalance) / (dexDogBalance - 1);
+      if (dexDogBalance < 1 || dexCatBalance < catTokensNeeded) {
+        break;
+      }
+      dogTokensBought += 1;
+      catTokensSpent += catTokensNeeded;
+      dexDogBalance -= 1;
+      dexCatBalance += catTokensNeeded;
+    }
+    if (dogTokensBought > 0) {
+      console.log(`Bought ${dogTokensBought} Dog Tokens on DEX for ${catTokensSpent} Cat Tokens`);
+      dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance);
+      dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance);
+      updateRelativePrice();
+    } else {
+      console.log('No arbitrage opportunity found');
+    }
+  } else if (coinbasePriceRatio < dexDogPrice - tolerance) {
+    console.log('Arbitrage opportunity: Buy Cat Token on DEX and sell on Coinbase');
+    // buy cat token on dex
+    let dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+    let dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+    let catTokensBought = 0;
+    let dogTokensSpent = 0;
+    while (coinbasePriceRatio < (dexCatBalance / dexDogBalance)) {
+      // buy 1 cat token at a time
+      const dogTokensNeeded = (1 * dexDogBalance) / (dexCatBalance - 1);
+      if (dexCatBalance < 1 || dexDogBalance < dogTokensNeeded) {
+        break;
+      }
+      catTokensBought += 1;
+      dogTokensSpent += dogTokensNeeded;
+      dexCatBalance -= 1;
+      dexDogBalance += dogTokensNeeded;
+    }
+    if (catTokensBought > 0) {
+      console.log(`Bought ${catTokensBought} Cat Tokens on DEX for ${dogTokensSpent} Dog Tokens`);
+      dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance);
+      dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance);
+      updateRelativePrice();
+    } else {
+      console.log('No arbitrage opportunity found');
+    }
+  } else {
+    console.log('No arbitrage opportunity found');
+  }
+}
+
+
+    
+  
+  
+  
+
+
+
 
 function depositLiquidityButtonHandler () {
   // get the user from the liquidityUserSelect
@@ -118,6 +203,47 @@ function depositLiquidityButtonHandler () {
 }
 
 function withdrawLiquidityButtonHandler () {
+  // get the user from the liquidityUserSelect
+  const user = liquidityUserSelect.value;
+  const userLower = user.toLowerCase();
+  const userShareOfLiquidityPool = parseFloat(document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML);
+  if (userShareOfLiquidityPool <= 0) {
+    alert(`${user} does not have any share of the liquidity pool to withdraw.`);
+    return;
+  }
+  console.log(`Withdrawing liquidity: ${user} wants to withdraw their share of the liquidity pool`);
+  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+  const dexTotalLiquidity = dexDogBalance + dexCatBalance;
+  
+  // Calculate the amount of Dog and Cat tokens to be withdrawn based on user's share of the liquidity pool
+  const dogTokensToWithdraw = (userShareOfLiquidityPool / 100) * dexDogBalance;
+  const catTokensToWithdraw = (userShareOfLiquidityPool / 100) * dexCatBalance;
+  
+  // Update user balances
+  const userDogBalance = parseFloat(document.getElementById(`${userLower}DogTokenBalance`).innerHTML);
+  const userCatBalance = parseFloat(document.getElementById(`${userLower}CatTokenBalance`).innerHTML);
+  document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance + dogTokensToWithdraw);
+  document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + catTokensToWithdraw);
+  
+  // Update DEX balances
+  dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - dogTokensToWithdraw);
+  dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance - catTokensToWithdraw);
+  
+  // Set user's share of liquidity pool to zero
+  document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML = '0';
+  
+  // Update other users' share of liquidity pool
+  const users = ['alice', 'bob', 'carol', 'dave'];
+  users.forEach(u => {
+    if (u !== userLower) {
+      const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
+      const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / (dexTotalLiquidity - (dogTokensToWithdraw + catTokensToWithdraw));
+      document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+    }
+  });
+  updateRelativePrice();
+  
 }
 
 
@@ -260,10 +386,10 @@ function tradeTokenAmount(user, tokenType, action, amount) {
 function executeTradeButtonHandler() {
   
 
-  const user = document.getElementById('userSelect').value;
-  const action = document.getElementById('actionSelect').value;
-  const tokenType = document.getElementById('tokenSelect').value;
-  const amount = parseFloat(document.getElementById('amountInput').value);
+  const user = executeUserSelect.value;
+  const action = executeActionSelect.value;
+  const tokenType = executeTokenSelect.value;
+  const amount = parseFloat(executeAmountInput.value);
   
   if (isNaN(amount) || amount <= 0) {
     alert('Please enter a valid amount greater than 0.');
