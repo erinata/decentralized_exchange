@@ -33,6 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
   bobSellOneCatTokenButton.addEventListener('click',  () => tradeTokenAmount('bob', 'Cat', 'sell', 1));
   const bobBuyOneCatTokenButton = document.getElementById('bobBuyOneCatTokenButton');
   bobBuyOneCatTokenButton.addEventListener('click', () => tradeTokenAmount('bob', 'Cat', 'buy', 1));
+  const executeTradeButton = document.getElementById('executeTradeButton');
+  executeTradeButton.addEventListener('click', executeTradeButtonHandler);
+
+  const userSelect = document.getElementById('userSelect');
+  const actionSelect = document.getElementById('actionSelect');
+  const tokenSelect = document.getElementById('tokenSelect');
+  const amountInput = document.getElementById('amountInput');
   
   initialize();
   updateRelativePrice();
@@ -92,12 +99,14 @@ function updateRelativePrice() {
     
 
 function tradeTokenAmount(user, tokenType, action, amount) {
+  // lowercase user for element IDs
+  user = user.toLowerCase();
   const userDogBalance = parseFloat(document.getElementById(`${user}DogTokenBalance`).innerHTML);
   const userCatBalance = parseFloat(document.getElementById(`${user}CatTokenBalance`).innerHTML);
   const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
   const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
 
-  if (tokenType === 'Dog') {
+  if (tokenType === 'dogToken') {
     if (action === 'sell') {
       if (userDogBalance < amount) {
         alert(`${user.charAt(0).toUpperCase() + user.slice(1)} does not have enough Dog Tokens to sell.`);
@@ -123,7 +132,7 @@ function tradeTokenAmount(user, tokenType, action, amount) {
       dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - amount);
       dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + catTokensNeeded);
     }
-  } else if (tokenType === 'Cat') {
+  } else if (tokenType === 'catToken') {
     if (action === 'sell') {
       if (userCatBalance < amount) {
         alert(`${user.charAt(0).toUpperCase() + user.slice(1)} does not have enough Cat Tokens to sell.`);
@@ -153,8 +162,23 @@ function tradeTokenAmount(user, tokenType, action, amount) {
   updateRelativePrice();
 }
   
+
+function executeTradeButtonHandler() {
   
+
+  const user = document.getElementById('userSelect').value;
+  const action = document.getElementById('actionSelect').value;
+  const tokenType = document.getElementById('tokenSelect').value;
+  const amount = parseFloat(document.getElementById('amountInput').value);
   
+  if (isNaN(amount) || amount <= 0) {
+    alert('Please enter a valid amount greater than 0.');
+    return;
+  }
+  console.log(`Executing trade: ${user} wants to ${action} ${amount} of ${tokenType} Token`);
+  tradeTokenAmount(user, tokenType, action, amount);  
+}
+
     
     
     
