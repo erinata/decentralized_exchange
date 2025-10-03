@@ -40,10 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const executeTokenSelect = document.getElementById('executeTokenSelect');
   const executeAmountInput = document.getElementById('executeAmountInput');
   
-  const liquidityCatTokenAmountDisplay = document.getElementById('liquidityCatTokenAmountDisplay');
-  const liquidityAmountInput = document.getElementById('liquidityAmountInput');
+  const liquidityCatAmountInput = document.getElementById('liquidityCatAmountInput');
+  const liquidityDogAmountInput = document.getElementById('liquidityDogAmountInput');
   // add event listener to repond to liquidityAmountInput value changes
-  liquidityAmountInput.addEventListener('input', (event) => liquidityAmountInputHandler(event));
+  liquidityDogAmountInput.addEventListener('input', (event) => liquidityDogAmountInputHandler(event));
+  liquidityCatAmountInput.addEventListener('input', (event) => liquidityCatAmountInputHandler(event));
   
   const liquidityUserSelect = document.getElementById('liquidityUserSelect');
   
@@ -152,10 +153,11 @@ function coinbaseArbitrageButtonHandler(remainingSteps = Infinity) {
 
 
 function depositLiquidityButtonHandler () {
+  
   // get the user from the liquidityUserSelect
   const user = liquidityUserSelect.value;
-  const dogTokenAmount = parseFloat(liquidityAmountInput.value);
-  const catTokenAmount = parseFloat(liquidityCatTokenAmountDisplay.innerHTML);
+  const dogTokenAmount = parseFloat(liquidityDogAmountInput.value);
+  const catTokenAmount = parseFloat(liquidityCatAmountInput.value);
   if (isNaN(dogTokenAmount) || dogTokenAmount <= 0 || isNaN(catTokenAmount) || catTokenAmount <= 0) {
     alert('Please enter a valid Token amount greater than 0.');
     return;
@@ -169,12 +171,35 @@ function depositLiquidityButtonHandler () {
   const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
   const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
   const dexTotalLiquidity = dexDogBalance + dexCatBalance;
+  
+  
+
+  
+  // if (dexDogBalance === 0 && dexCatBalance === 0) {
+  //   catTokenAmount = dogTokenAmount;
+  // }
+
   if (userDogBalance < dogTokenAmount) {
     alert(`${user} does not have enough Dog Tokens to deposit.`);
     return;
   }
   if (userCatBalance < catTokenAmount) {
     alert(`${user} does not have enough Cat Tokens to deposit.`);
+    return;
+  }
+  
+  if (dexDogBalance === 0 && dexCatBalance === 0) {
+    // first liquidity provider sets the initial price
+    if (dogTokenAmount <= 0 || catTokenAmount <= 0) {
+      alert('Initial liquidity must be greater than 0 for both Dog and Cat Tokens.');
+      return;
+    }
+    document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML = '100';
+    dexDogTokenBalance.innerHTML = cleanUpNumbers(dogTokenAmount);
+    dexCatTokenBalance.innerHTML = cleanUpNumbers(catTokenAmount);
+    document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance - dogTokenAmount);
+    document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance - catTokenAmount);
+    updateRelativePrice();
     return;
   }
   
@@ -189,7 +214,13 @@ function depositLiquidityButtonHandler () {
     if (u !== userLower) {
       const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
       const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / (dexTotalLiquidity + liquidityAdded);
-      document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+      if (otherUserNewShare < 0) {
+        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '0';
+      } else if (otherUserNewShare > 100) {
+        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '100';
+      } else {
+        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+      }
     }
   });
     
@@ -243,9 +274,19 @@ function withdrawLiquidityButtonHandler () {
   const users = ['alice', 'bob', 'carol', 'dave'];
   users.forEach(u => {
     if (u !== userLower) {
-      const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
-      const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / (dexTotalLiquidity - (dogTokensToWithdraw + catTokensToWithdraw));
-      document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+      if (dexTotalLiquidity - (dogTokensToWithdraw + catTokensToWithdraw) <= 0) {
+        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '0';
+      } else {
+        const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
+        const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / (dexTotalLiquidity - (dogTokensToWithdraw + catTokensToWithdraw));
+        if (otherUserNewShare < 0) {
+          document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '0';
+        } else if (otherUserNewShare > 100) {
+          document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '100';
+        } else {
+          document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+        }
+      }
     }
   });
   updateRelativePrice();
@@ -254,24 +295,53 @@ function withdrawLiquidityButtonHandler () {
 
 
 
-function liquidityAmountInputHandler(event) {
+function liquidityDogAmountInputHandler(event) {
   const value = event.target.value;
   if (isNaN(value) || value <= 0) {
     event.target.value = '';
     return;
   } else {
-    // calculate the equivalent Dog and Cat token amounts based on current DEX balances
-    //  restricting the d```og token amount is the same as the value
+    const dogTokenAmount = parseFloat(value);
     const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
     const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
-    const catTokenAmount = (parseFloat(value) * dexCatBalance) / dexDogBalance;
-    liquidityCatTokenAmountDisplay.innerHTML = cleanUpNumbers(catTokenAmount);
+    if (dexDogBalance === 0 && dexCatBalance === 0) {
+      return;
+    } else if (dexDogBalance === 0) {
+      return;
+    } else if (dexCatBalance === 0) {
+      return;
+    } else {
+      const catTokenAmount = (dogTokenAmount * dexCatBalance) / dexDogBalance;
+      // liquidityDogAmountInput.value = cleanUpNumbers(dogTokenAmount);
+      liquidityCatAmountInput.value = cleanUpNumbers(catTokenAmount);
+    }
     
   }
   
 }
 
-
+function liquidityCatAmountInputHandler(event) {
+  const value = event.target.value;
+  if (isNaN(value) || value <= 0) {
+    event.target.value = '';
+    return;
+  } else {
+    const catTokenAmount = parseFloat(value);
+    const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+    const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+    if (dexDogBalance === 0 && dexCatBalance === 0) {
+      return;
+    } else if (dexDogBalance === 0) {
+      return;
+    } else if (dexCatBalance === 0) {
+      return;
+    } else {
+      const dogTokenAmount = (catTokenAmount * dexDogBalance) / dexCatBalance;
+      // liquidityCatAmountInput.value = cleanUpNumbers(catTokenAmount);
+      liquidityDogAmountInput.value = cleanUpNumbers(dogTokenAmount);
+    }
+  } 
+}
 
 function initialize() {
 
@@ -288,8 +358,8 @@ function initialize() {
   daveDogTokenBalance.innerHTML = '1000';
   daveCatTokenBalance.innerHTML = '1000';
   daveShareOfLiquidityPool.innerHTML = '100';
-  dexDogTokenBalance.innerHTML = '1000';
-  dexCatTokenBalance.innerHTML = '2000';
+  dexDogTokenBalance.innerHTML = '100';
+  dexCatTokenBalance.innerHTML = '300';
   relativePriceDogTokenInCatToken.innerHTML = '1';
   relativePriceCatTokenInDogToken.innerHTML = '1';
   coinbaseDogTokenPrice.innerHTML = '1';
@@ -305,7 +375,11 @@ function cleanUpNumbers(num) {
 function updateRelativePrice() {
   const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
   const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
-  if (dexDogBalance === 0) {
+  
+  if (dexDogBalance === 0 && dexCatBalance === 0) {
+    relativePriceDogTokenInCatToken.innerHTML = 'N/A';
+    relativePriceCatTokenInDogToken.innerHTML = 'N/A';
+  } else if (dexDogBalance === 0) {
     relativePriceDogTokenInCatToken.innerHTML = 'Infinity';
     relativePriceCatTokenInDogToken.innerHTML = '0';
   } else if (dexCatBalance === 0) {
