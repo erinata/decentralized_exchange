@@ -26,13 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const coinbaseDogTokenPrice = document.getElementById('coinbaseDogTokenPrice');
   const coinbaseCatTokenPrice = document.getElementById('coinbaseCatTokenPrice');
   const aliceSellOneDogTokenButton = document.getElementById('aliceSellOneDogTokenButton');
-  aliceSellOneDogTokenButton.addEventListener('click', aliceSellOneDogToken);
+  aliceSellOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'sell', 1));
   const aliceBuyOneDogTokenButton = document.getElementById('aliceBuyOneDogTokenButton');
-  aliceBuyOneDogTokenButton.addEventListener('click', aliceBuyOneDogToken);
+  aliceBuyOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'buy', 1));
   const bobSellOneCatTokenButton = document.getElementById('bobSellOneCatTokenButton');
-  bobSellOneCatTokenButton.addEventListener('click', bobSellOneCatToken);
+  bobSellOneCatTokenButton.addEventListener('click',  () => tradeTokenAmount('bob', 'Cat', 'sell', 1));
   const bobBuyOneCatTokenButton = document.getElementById('bobBuyOneCatTokenButton');
-  bobBuyOneCatTokenButton.addEventListener('click', bobBuyOneCatToken);
+  bobBuyOneCatTokenButton.addEventListener('click', () => tradeTokenAmount('bob', 'Cat', 'buy', 1));
   
   initialize();
   updateRelativePrice();
@@ -89,110 +89,74 @@ function updateRelativePrice() {
   }
 }
 
-
-
-
-function aliceSellOneDogToken() {
-  const aliceDogBalance = parseFloat(aliceDogTokenBalance.innerHTML);
-  const aliceCatBalance = parseFloat(aliceCatTokenBalance.innerHTML);
-  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
-  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
-
-  if (aliceDogBalance < 1) {
-    alert("Alice does not have enough Dog Tokens to sell.");
-    return;
-  }
-
-  // Calculate how many Cat Tokens Alice will receive
-  const catTokensReceived = (1 * dexCatBalance) / (dexDogBalance + 1);
-
-  // Update balances
-  aliceDogTokenBalance.innerHTML = cleanUpNumbers(aliceDogBalance - 1);
-  aliceCatTokenBalance.innerHTML = cleanUpNumbers(aliceCatBalance + catTokensReceived);
-  dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + 1);
-  dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance - catTokensReceived);
-
-  // Update relative price
-  updateRelativePrice();
-}
-
-function aliceBuyOneDogToken() {
-  const aliceDogBalance = parseFloat(aliceDogTokenBalance.innerHTML);
-  const aliceCatBalance = parseFloat(aliceCatTokenBalance.innerHTML);
-  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
-  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
-
-  if (dexDogBalance < 1) {
-    alert("DEX does not have enough Dog Tokens for Alice to buy.");
-    return;
-  }
-
-  // Calculate how many Cat Tokens Alice needs to pay
-  const catTokensNeeded = (1 * dexCatBalance) / (dexDogBalance - 1);
-
-  if (aliceCatBalance < catTokensNeeded) {
-    alert("Alice does not have enough Cat Tokens to buy Dog Tokens.");
-    return;
-  }
-
-  // Update balances
-  aliceDogTokenBalance.innerHTML = cleanUpNumbers(aliceDogBalance + 1);
-  aliceCatTokenBalance.innerHTML = cleanUpNumbers(aliceCatBalance - catTokensNeeded);
-  dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - 1);
-  dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + catTokensNeeded);
-
-  // Update relative price
-  updateRelativePrice();
-}
-
-
-function bobSellOneCatToken() {
-  const bobDogBalance = parseFloat(bobDogTokenBalance.innerHTML);
-  const bobCatBalance = parseFloat(bobCatTokenBalance.innerHTML);
-  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
-  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
-
-  if (bobCatBalance < 1) {
-    alert("Bob does not have enough Cat Tokens to sell.");
-    return;
-  }
-
-  // Calculate how many Dog Tokens Bob will receive
-  const dogTokensReceived = (1 * dexDogBalance) / (dexCatBalance + 1);
-
-  // Update balances
-  bobCatTokenBalance.innerHTML = cleanUpNumbers(bobCatBalance - 1);
-  bobDogTokenBalance.innerHTML = cleanUpNumbers(bobDogBalance + dogTokensReceived);
-  dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + 1);
-  dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - dogTokensReceived);
-
-  // Update relative price
-  updateRelativePrice();
-}
-
-function bobBuyOneCatToken() {
-  const bobDogBalance = parseFloat(bobDogTokenBalance.innerHTML);
-  const bobCatBalance = parseFloat(bobCatTokenBalance.innerHTML);
-  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
-  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
-  
-  if (dexCatBalance < 1) {
-    alert("DEX does not have enough Cat Tokens for Bob to buy.");
-    return;
-  }
-  // Calculate how many Dog Tokens Bob needs to pay
-  const dogTokensNeeded = (1 * dexDogBalance) / (dexCatBalance - 1);
-  if (bobDogBalance < dogTokensNeeded) {
-    alert("Bob does not have enough Dog Tokens to buy Cat Tokens.");
-    return;
-  }
-  // Update balances
-  bobCatTokenBalance.innerHTML = cleanUpNumbers(bobCatBalance + 1);
-  bobDogTokenBalance.innerHTML = cleanUpNumbers(bobDogBalance - dogTokensNeeded);
-  dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance - 1);
-  dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + dogTokensNeeded);
-  // Update relative price
-  updateRelativePrice();
-}
-
     
+
+function tradeTokenAmount(user, tokenType, action, amount) {
+  const userDogBalance = parseFloat(document.getElementById(`${user}DogTokenBalance`).innerHTML);
+  const userCatBalance = parseFloat(document.getElementById(`${user}CatTokenBalance`).innerHTML);
+  const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+  const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+
+  if (tokenType === 'Dog') {
+    if (action === 'sell') {
+      if (userDogBalance < amount) {
+        alert(`${user.charAt(0).toUpperCase() + user.slice(1)} does not have enough Dog Tokens to sell.`);
+        return;
+      }
+      const catTokensReceived = (amount * dexCatBalance) / (dexDogBalance + amount);
+      document.getElementById(`${user}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance - amount);
+      document.getElementById(`${user}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + catTokensReceived);
+      dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + amount);
+      dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance - catTokensReceived);
+    } else if (action === 'buy') {
+      if (dexDogBalance < amount) {
+        alert(`DEX does not have enough Dog Tokens for ${user.charAt(0).toUpperCase() + user.slice(1)} to buy.`);
+        return;
+      }
+      const catTokensNeeded = (amount * dexCatBalance) / (dexDogBalance - amount);
+      if (userCatBalance < catTokensNeeded) {
+        alert(`${user.charAt(0).toUpperCase() + user.slice(1)} does not have enough Cat Tokens to buy Dog Tokens.`);
+        return;
+      }
+      document.getElementById(`${user}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance + amount);
+      document.getElementById(`${user}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance - catTokensNeeded);
+      dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - amount);
+      dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + catTokensNeeded);
+    }
+  } else if (tokenType === 'Cat') {
+    if (action === 'sell') {
+      if (userCatBalance < amount) {
+        alert(`${user.charAt(0).toUpperCase() + user.slice(1)} does not have enough Cat Tokens to sell.`);
+        return;
+      }
+      const dogTokensReceived = (amount * dexDogBalance) / (dexCatBalance + amount);
+      document.getElementById(`${user}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance - amount);
+      document.getElementById(`${user}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance + dogTokensReceived);
+      dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + amount);
+      dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - dogTokensReceived);
+    } else if (action === 'buy') {
+      if (dexCatBalance < amount) {
+        alert(`DEX does not have enough Cat Tokens for ${user.charAt(0).toUpperCase() + user.slice(1)} to buy.`);
+        return;
+      }
+      const dogTokensNeeded = (amount * dexDogBalance) / (dexCatBalance - amount);
+      if (userDogBalance < dogTokensNeeded) {
+        alert(`${user.charAt(0).toUpperCase() + user.slice(1)} does not have enough Dog Tokens to buy Cat Tokens.`);
+        return;
+      }
+      document.getElementById(`${user}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + amount);
+      document.getElementById(`${user}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance - dogTokensNeeded);
+      dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance - amount);
+      dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + dogTokensNeeded);
+    }
+  }
+  updateRelativePrice();
+}
+  
+  
+  
+    
+    
+    
+      
+      
