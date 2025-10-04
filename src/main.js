@@ -143,7 +143,7 @@ function updateAssetUsdValue() {
     const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
     const userLiquidityValueInUSD = (userShareOfLiquidityPool / 100) * ((dexDogBalance * coinbaseDogPrice) + (dexCatBalance * coinbaseCatPrice));
     const totalValueInUSD = (userDogBalance * coinbaseDogPrice) + (userCatBalance * coinbaseCatPrice) + userLiquidityValueInUSD;
-    document.getElementById(`${user}TotalValueInUSD`).innerHTML = `$${cleanUpNumbers(totalValueInUSD)}`;
+    document.getElementById(`${user}TotalValueInUSD`).innerHTML = `$${cleanUpNumbers(totalValueInUSD,2)}`;
   });
 }
 
@@ -480,8 +480,8 @@ function initialize() {
   
 }
 
-function cleanUpNumbers(num) {
-  return num.toFixed(16).replace(/\.?0+$/, '');
+function cleanUpNumbers(num, precision = 16) {
+  return num.toFixed(precision).replace(/\.?0+$/, '');
 }
 
 // Function to update the relative price of Dog Token in terms of Cat Token
