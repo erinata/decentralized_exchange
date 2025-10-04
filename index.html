@@ -202,65 +202,57 @@
             </div>
             
             
-            <!-- <div class="col-span-2 ...">05</div>
-            <div class="col-span-2 ...">06</div> -->
+
+            <div class="overflow-auto p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200 col-span-4">
+              <div class="text-3xl font-bold mb-2">Decentralized Exchange (DEX)</div>
+              <hr/>
+              <div>Dex Contract DogToken Balance: <span id="dexDogTokenBalance">0</span></div>
+              <div>Dex Contract CatToken Balance: <span id="dexCatTokenBalance">0</span></div>
+              <div>Relative Price of DogToken in CatToken: <span id="relativePriceDogTokenInCatToken">1</span></div>
+              <div>Relative Price of CatToken in DogToken: <span id="relativePriceCatTokenInDogToken">1</span></div>
+            </div>
+            
+            <div class="overflow-auto p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200 col-span-4">
+              <div class="text-3xl font-bold mb-2">Outside World</div>
+              
+              <!-- button for coinbase arbitrage kicks in -->
+              <button id="coinbaseArbitrageButton" type="button">Coinbase Arbitrage (Infinite Steps)</button>
+              <!-- button for coinbase arbitrage just one step -->
+              <button id="coinbaseArbitrageOneStepButton" type="button">Coinbase Arbitrage (One Step)</button>
+              <br/>
+              <!-- inputbox for coinbase dogtoken price in usd  -->
+              <label for="coinbaseDogTokenPriceInput">Coinbase DogToken Price in USD:</label>
+              <input type="number" id="coinbaseDogTokenPriceInput" value="1" min="0.01" step="0.01"/>
+              <label for="coinbaseCatTokenPriceInput">Coinbase CatToken Price in USD:</label>
+              <input type="number" id="coinbaseCatTokenPriceInput" value="1" min="0.01" step="0.01"/>
+              
           </div>
-          
-          
-          
-          
-          
-    
-          
-          
-    
-          <div>Dex Contract DogToken Balance: <span id="dexDogTokenBalance">0</span></div>
-          <div>Dex Contract CatToken Balance: <span id="dexCatTokenBalance">0</span></div>
-          <div>Relative Price of DogToken in CatToken: <span id="relativePriceDogTokenInCatToken">1</span></div>
-          <div>Relative Price of CatToken in DogToken: <span id="relativePriceCatTokenInDogToken">1</span></div>
-
-
-          <div>
-            
-            
-            <!-- button for coinbase arbitrage kicks in -->
-            <button id="coinbaseArbitrageButton" type="button">Coinbase Arbitrage (Infinite Steps)</button>
-            <!-- button for coinbase arbitrage just one step -->
-            <button id="coinbaseArbitrageOneStepButton" type="button">Coinbase Arbitrage (One Step)</button>
-            <br/>
-            <!-- inputbox for coinbase dogtoken price in usd  -->
-            <label for="coinbaseDogTokenPriceInput">Coinbase DogToken Price in USD:</label>
-            <input type="number" id="coinbaseDogTokenPriceInput" value="1" min="0.01" step="0.01"/>
-            <label for="coinbaseCatTokenPriceInput">Coinbase CatToken Price in USD:</label>
-            <input type="number" id="coinbaseCatTokenPriceInput" value="1" min="0.01" step="0.01"/>
-          
-            <br/>
-            <!-- dropdown box to choose user, token, and amount to airdrop -->
-            <label for="airdropUserSelect">Airdrop User:</label>
-            <select id="airdropUserSelect">
-              <option value="alice">Alice</option>
-              <option value="bob">Bob</option>
-              <option value="carol">Carol</option>
-              <option value="dave">Dave</option>
-              <option value="all">All</option>
-            </select>
-            
-            <label for="airdropTokenSelect">Airdrop Token:</label>
-            <select id="airdropTokenSelect">
-              <option value="dogToken">DogToken</option>
-              <option value="catToken">CatToken</option>
-            </select>
-            
-            <label for="airdropAmountInput">Airdrop Amount:</label>
-            <input type="number" id="airdropAmountInput"/>
-            <button id="airdropButton" type="button">Airdrop Tokens</button>
-          
-          
-
+          <div class="overflow-auto p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200 col-span-4">
+              <div class="text-3xl font-bold mb-2">God Mode</div>
+              <hr/>
+              <label for="airdropUserSelect">Airdrop User:</label>
+              <select id="airdropUserSelect">
+                <option value="alice">Alice</option>
+                <option value="bob">Bob</option>
+                <option value="carol">Carol</option>
+                <option value="dave">Dave</option>
+                <option value="all">All</option>
+              </select>
+              
+              <label for="airdropTokenSelect">Airdrop Token:</label>
+              <select id="airdropTokenSelect">
+                <option value="dogToken">DogToken</option>
+                <option value="catToken">CatToken</option>
+              </select>
+              
+              <label for="airdropAmountInput">Airdrop Amount:</label>
+              <input type="number" id="airdropAmountInput"/>
+              <button id="airdropButton" type="button">Airdrop Tokens</button>
             
           </div>
+
           
-          
+        
           
           
           
