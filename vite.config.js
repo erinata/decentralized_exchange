@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  base: '/impermanent_loss/',                 // << include trailing slash
+  base: '/decentralized_exchange/',                 // << include trailing slash
   build: { outDir: 'docs' },        // output to /docs for GitHub Pages
   plugins: [
     tailwindcss(),
