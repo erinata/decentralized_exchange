@@ -422,6 +422,23 @@ function withdrawLiquidityButtonHandler (user) {
   // Set user's share of liquidity pool to zero
   document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML = '0';
   
+  // if all user has share of liquidity pool is withdrawn, set DEX balances to zero
+  // sum the share of all other users
+  const totalOtherUsersShare = ['alice', 'bob', 'carol', 'dave'].reduce((acc, u) => {
+    if (u !== userLower) {
+      return acc + parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
+    } else {
+      return acc;
+    }
+  }, 0);
+  if (totalOtherUsersShare === 0) {
+    dexDogTokenBalance.innerHTML = '0';
+    dexCatTokenBalance.innerHTML = '0';
+    document.getElementById('relativePriceDogTokenInCatToken').innerHTML = 'N/A';
+    document.getElementById('relativePriceCatTokenInDogToken').innerHTML = 'N/A';
+  }
+  
+  
   // Update other users' share of liquidity pool
   const users = ['alice', 'bob', 'carol', 'dave'];
   users.forEach(u => {
@@ -441,6 +458,7 @@ function withdrawLiquidityButtonHandler (user) {
       }
     }
   });
+  writeToActivityLog(`${user} withdrew all share of the liquidity pool: ${cleanUpNumbers(dogTokensToWithdraw)} Dog Tokens and ${cleanUpNumbers(catTokensToWithdraw)} Cat Tokens.`);
   updateRelativePrice();
   
 }
