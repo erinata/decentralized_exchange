@@ -23,22 +23,46 @@ document.addEventListener('DOMContentLoaded', () => {
   const dexCatTokenBalance = document.getElementById('dexCatTokenBalance');
   const relativePriceDogTokenInCatToken = document.getElementById('relativePriceDogTokenInCatToken');
   const relativePriceCatTokenInDogToken = document.getElementById('relativePriceCatTokenInDogToken');
-  // const coinbaseDogTokenPrice = document.getElementById('coinbaseDogTokenPrice');
-  // const coinbaseCatTokenPrice = document.getElementById('coinbaseCatTokenPrice');
-  // const aliceSellOneDogTokenButton = document.getElementById('aliceSellOneDogTokenButton');
-  // aliceSellOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'sell', 1));
-  // const aliceBuyOneDogTokenButton = document.getElementById('aliceBuyOneDogTokenButton');
-  // aliceBuyOneDogTokenButton.addEventListener('click', () => tradeTokenAmount('alice', 'Dog', 'buy', 1));
-  // const bobSellOneCatTokenButton = document.getElementById('bobSellOneCatTokenButton');
-  // bobSellOneCatTokenButton.addEventListener('click',  () => tradeTokenAmount('bob', 'Cat', 'sell', 1));
-  // const bobBuyOneCatTokenButton = document.getElementById('bobBuyOneCatTokenButton');
-  // bobBuyOneCatTokenButton.addEventListener('click', () => tradeTokenAmount('bob', 'Cat', 'buy', 1));
-  const executeTradeButton = document.getElementById('executeTradeButton');
-  executeTradeButton.addEventListener('click', executeTradeButtonHandler);
-  const executeUserSelect = document.getElementById('executeUserSelect');
-  const executeActionSelect = document.getElementById('executeActionSelect');
-  const executeTokenSelect = document.getElementById('executeTokenSelect');
-  const executeAmountInput = document.getElementById('executeAmountInput');
+  
+  // const executeTradeButton = document.getElementById('executeTradeButton');
+  // executeTradeButton.addEventListener('click', executeTradeButtonHandler);
+  // const executeUserSelect = document.getElementById('executeUserSelect');
+  // const executeActionSelect = document.getElementById('executeActionSelect');
+  // const executeTokenSelect = document.getElementById('executeTokenSelect');
+  // const executeAmountInput = document.getElementById('executeAmountInput');
+  
+  const executeTradeBuyAliceButton = document.getElementById('executeTradeBuyAliceButton');
+  executeTradeBuyAliceButton.addEventListener('click', () => executeTradeButtonHandler('Alice', 'buy'));
+  const executeTradeSellAliceButton = document.getElementById('executeTradeSellAliceButton');
+  executeTradeSellAliceButton.addEventListener('click', () => executeTradeButtonHandler('Alice', 'sell'));
+  const executeTokenSelectAlice = document.getElementById('executeTokenSelectAlice');
+  const executeAmountInputAlice = document.getElementById('executeAmountInputAlice');
+  
+  const executeTradeBuyBobButton = document.getElementById('executeTradeBuyBobButton');
+  executeTradeBuyBobButton.addEventListener('click', () => executeTradeButtonHandler('Bob', 'buy'));
+  const executeTradeSellBobButton = document.getElementById('executeTradeSellBobButton');
+  executeTradeSellBobButton.addEventListener('click', () => executeTradeButtonHandler('Bob', 'sell'));
+  const executeTokenSelectBob = document.getElementById('executeTokenSelectBob');
+  const executeAmountInputBob = document.getElementById('executeAmountInputBob');
+  
+  const executeTradeBuyCarolButton = document.getElementById('executeTradeBuyCarolButton');
+  executeTradeBuyCarolButton.addEventListener('click', () => executeTradeButtonHandler('Carol', 'buy'));
+  const executeTradeSellCarolButton = document.getElementById('executeTradeSellCarolButton');
+  executeTradeSellCarolButton.addEventListener('click', () => executeTradeButtonHandler('Carol', 'sell'));
+  const executeTokenSelectCarol = document.getElementById('executeTokenSelectCarol');
+  const executeAmountInputCarol = document.getElementById('executeAmountInputCarol');
+  
+  const executeTradeBuyDaveButton = document.getElementById('executeTradeBuyDaveButton');
+  executeTradeBuyDaveButton.addEventListener('click', () => executeTradeButtonHandler('Dave', 'buy'));
+  const executeTradeSellDaveButton = document.getElementById('executeTradeSellDaveButton');
+  executeTradeSellDaveButton.addEventListener('click', () => executeTradeButtonHandler('Dave', 'sell'));
+  const executeTokenSelectDave = document.getElementById('executeTokenSelectDave');
+  const executeAmountInputDave = document.getElementById('executeAmountInputDave');
+  
+  
+  
+  
+  
   
   const liquidityCatAmountInput = document.getElementById('liquidityCatAmountInput');
   const liquidityDogAmountInput = document.getElementById('liquidityDogAmountInput');
@@ -76,22 +100,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function airdropButtonHandler() {
   const user = airdropUserSelect.value;
-  const tokenType = airdropTokenSelect.value;
-  const amount = parseFloat(airdropAmountInput.value);
-  if (isNaN(amount) || amount <= 0) {
-    alert('Please enter a valid amount greater than 0.');
-    return;
-  }
-  console.log(`Airdropping ${amount} of ${tokenType} Token to ${user}`);
-  // lowercase user for element IDs
-  const userLower = user.toLowerCase();
-  const userDogBalance = parseFloat(document.getElementById(`${userLower}DogTokenBalance`).innerHTML);
-  const userCatBalance = parseFloat(document.getElementById(`${userLower}CatTokenBalance`).innerHTML);
-  if (tokenType === 'dogToken') {
-    document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance + amount);
-  } else if (tokenType === 'catToken') {
-    document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + amount);
-  }
+  const users = user === 'all' ? ['Alice', 'Bob', 'Carol', 'Dave'] : [user];
+  users.forEach(u => airdropToUser(u));
+}
+
+function airdropToUser(user) {
+    const tokenType = airdropTokenSelect.value;
+    const amount = parseFloat(airdropAmountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid amount greater than 0.');
+      return;
+    }
+    console.log(`Airdropping ${amount} of ${tokenType} Token to ${user}`);
+    // lowercase user for element IDs
+    const userLower = user.toLowerCase();
+    const userDogBalance = parseFloat(document.getElementById(`${userLower}DogTokenBalance`).innerHTML);
+    const userCatBalance = parseFloat(document.getElementById(`${userLower}CatTokenBalance`).innerHTML);
+    if (tokenType === 'dogToken') {
+      document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance + amount);
+    } else if (tokenType === 'catToken') {
+      document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + amount);
+    }
 }
   
 
@@ -488,13 +517,27 @@ function tradeTokenAmount(user, tokenType, action, amount) {
 }
   
 
-function executeTradeButtonHandler() {
+// function executeTradeButtonHandler() {
   
 
-  const user = executeUserSelect.value;
-  const action = executeActionSelect.value;
-  const tokenType = executeTokenSelect.value;
-  const amount = parseFloat(executeAmountInput.value);
+//   const user = executeUserSelect.value;
+//   const action = executeActionSelect.value;
+//   const tokenType = executeTokenSelect.value;
+//   const amount = parseFloat(executeAmountInput.value);
+  
+//   if (isNaN(amount) || amount <= 0) {
+//     alert('Please enter a valid amount greater than 0.');
+//     return;
+//   }
+//   console.log(`Executing trade: ${user} wants to ${action} ${amount} of ${tokenType} Token`);
+//   tradeTokenAmount(user, tokenType, action, amount);  
+// }
+
+function executeTradeButtonHandler(user, action) {
+  
+  
+  const tokenType = document.getElementById(`executeTokenSelect${user}`).value;
+  const amount = parseFloat(document.getElementById(`executeAmountInput${user}`).value);
   
   if (isNaN(amount) || amount <= 0) {
     alert('Please enter a valid amount greater than 0.');

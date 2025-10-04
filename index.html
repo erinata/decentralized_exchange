@@ -28,39 +28,61 @@
           <div>Coinbase Price of DogToken in USD: <span id="coinbaseDogTokenPrice">1</span></div>
           <div>Coinbase Price of CatToken in USD: <span id="coinbaseCatTokenPrice">1</span></div>
           
-          <!-- a button to activate the function aliceSellOneDogToken() -->
-          <!-- <button id="aliceSellOneDogTokenButton" type="button">Alice Sell 1 DogToken</button>
-          <button id="aliceBuyOneDogTokenButton" type="button">Alice Buy 1 DogToken</button>
-          <button id="bobSellOneCatTokenButton" type="button">Bob Sell 1 CatToken</button>
-          <button id="bobBuyOneCatTokenButton" type="button">Bob Buy 1 CatToken</button> -->
-          
-          <!-- make dropdown boxes for people to choose the user, the action , the token and the amount -->
+
           <div>
-            <label for="executeUserSelect">User:</label>
-            <select id="executeUserSelect">
-              <option value="alice">Alice</option>
-              <option value="bob">Bob</option>
-              <option value="carol">Carol</option>
-              <option value="dave">Dave</option>
-            </select>
-
-            <label for="executeActionSelect">Action:</label>
-            <select id="executeActionSelect">
-              <option value="buy">Buy</option>
-              <option value="sell">Sell</option>
-            </select>
-
-            <label for="executeTokenSelect">Token:</label>
-            <select id="executeTokenSelect">
+            <span>Alice</span>
+            <label for="executeTokenSelectAlice">Token:</label>
+            <select id="executeTokenSelectAlice">
               <option value="dogToken">DogToken</option>
               <option value="catToken">CatToken</option>
             </select>
-
-            <label for="executeAmountInput">Amount:</label>
-            <input type="number" id="executeAmountInput" value="1" min="1" />
-
-            <button id="executeTradeButton" type="button">Execute Trade</button>
+            <label for="executeAmountInputAlice">Amount:</label>
+            <input type="number" id="executeAmountInputAlice" value="1" min="1" />
+            <button id="executeTradeBuyAliceButton" type="button">Buy</button>
+            <button id="executeTradeSellAliceButton" type="button">Sell</button>
             <br/>
+            
+            <span>Bob</span>
+            <label for="executeTokenSelectBob">Token:</label>
+            <select id="executeTokenSelectBob">
+              <option value="dogToken">DogToken</option>
+              <option value="catToken">CatToken</option>
+            </select>
+            <label for="executeAmountInputBob">Amount:</label>
+            <input type="number" id="executeAmountInputBob" value="1" min="1" />
+            <button id="executeTradeBuyBobButton" type="button">Buy</button>
+            <button id="executeTradeSellBobButton" type="button">Sell</button>
+            <br/>
+            
+            <span>Carol</span>
+            <label for="executeTokenSelectCarol">Token:</label>
+            <select id="executeTokenSelectCarol">
+              <option value="dogToken">DogToken</option>
+              <option value="catToken">CatToken</option>
+            </select>
+            <label for="executeAmountInputCarol">Amount:</label>
+            <input type="number" id="executeAmountInputCarol" value="1" min="1" />
+            <button id="executeTradeBuyCarolButton" type="button">Buy</button>
+            <button id="executeTradeSellCarolButton" type="button">Sell</button>
+            <br/>
+            
+            <span>Dave</span>
+            <label for="executeTokenSelectDave">Token:</label>
+            <select id="executeTokenSelectDave">
+              <option value="dogToken">DogToken</option>
+              <option value="catToken">CatToken</option>
+            </select>
+            <label for="executeAmountInputDave">Amount:</label>
+            <input type="number" id="executeAmountInputDave" value="1" min="1" />
+            <button id="executeTradeBuyDaveButton" type="button">Buy</button>
+            <button id="executeTradeSellDaveButton" type="button">Sell</button>
+            <br/>
+            
+            
+            
+            
+            
+            
 
             <label for="liquidityUserSelect">User:</label>
             <select id="liquidityUserSelect">
@@ -99,6 +121,7 @@
               <option value="bob">Bob</option>
               <option value="carol">Carol</option>
               <option value="dave">Dave</option>
+              <option value="all">All</option>
             </select>
             
             <label for="airdropTokenSelect">Airdrop Token:</label>
