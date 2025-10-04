@@ -100,12 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
   depositLiquidityDaveButton.addEventListener('click', () => depositLiquidityButtonHandler('Dave'));
   withdrawLiquidityDaveButton.addEventListener('click', () => withdrawLiquidityButtonHandler('Dave'));
   
-  
-    
-    
-  
-  
-  
+  const aliceTotalValueInUSD = document.getElementById('aliceTotalValueInUSD');
+  const bobTotalValueInUSD = document.getElementById('bobTotalValueInUSD');
+  const carolTotalValueInUSD = document.getElementById('carolTotalValueInUSD');
+  const daveTotalValueInUSD = document.getElementById('daveTotalValueInUSD');
+
   const coinbaseArbitrageButton = document.getElementById('coinbaseArbitrageButton');
   coinbaseArbitrageButton.addEventListener('click', () => coinbaseArbitrageButtonHandler());
   
@@ -114,22 +113,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const coinbaseDogTokenPriceInput = document.getElementById('coinbaseDogTokenPriceInput');
   const coinbaseCatTokenPriceInput = document.getElementById('coinbaseCatTokenPriceInput');
+  coinbaseDogTokenPriceInput.addEventListener('input', updateAssetUsdValue);
+  coinbaseCatTokenPriceInput.addEventListener('input', updateAssetUsdValue);
 
   const airdropUserSelect = document.getElementById('airdropUserSelect');
   const airdropTokenSelect = document.getElementById('airdropTokenSelect');
   const airdropAmountInput = document.getElementById('airdropAmountInput');
   const airdropButton = document.getElementById('airdropButton');
   airdropButton.addEventListener('click', airdropButtonHandler);
-
+  
+  
+  
   initialize();
   updateRelativePrice();
+  updateAssetUsdValue();
 });
+
+
+function updateAssetUsdValue() {
+  const coinbaseDogPrice = parseFloat(coinbaseDogTokenPriceInput.value);
+  const coinbaseCatPrice = parseFloat(coinbaseCatTokenPriceInput.value);
+  const users = ['alice', 'bob', 'carol', 'dave'];
+  users.forEach(user => {
+    const userDogBalance = parseFloat(document.getElementById(`${user}DogTokenBalance`).innerHTML);
+    const userCatBalance = parseFloat(document.getElementById(`${user}CatTokenBalance`).innerHTML);
+    // calculate the value of liquidity pool share
+    const userShareOfLiquidityPool = parseFloat(document.getElementById(`${user}ShareOfLiquidityPool`).innerHTML);
+    const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
+    const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
+    const userLiquidityValueInUSD = (userShareOfLiquidityPool / 100) * ((dexDogBalance * coinbaseDogPrice) + (dexCatBalance * coinbaseCatPrice));
+    const totalValueInUSD = (userDogBalance * coinbaseDogPrice) + (userCatBalance * coinbaseCatPrice) + userLiquidityValueInUSD;
+    document.getElementById(`${user}TotalValueInUSD`).innerHTML = `$${cleanUpNumbers(totalValueInUSD)}`;
+  });
+}
+
+    
+    
+  
+
 
 
 function airdropButtonHandler() {
     const user = airdropUserSelect.value;
     const users = user === 'all' ? ['Alice', 'Bob', 'Carol', 'Dave'] : [user];
     users.forEach(u => airdropToUser(u));
+    updateAssetUsdValue();
 }
 
 function airdropToUser(user) {
@@ -149,6 +177,7 @@ function airdropToUser(user) {
     } else if (tokenType === 'catToken') {
       document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + amount);
     }
+    
 }
   
 
@@ -223,6 +252,7 @@ function coinbaseArbitrageButtonHandler(remainingSteps = Infinity) {
   } else {
     console.log('No arbitrage opportunity found');
   }
+  updateAssetUsdValue();
 }
 
 
@@ -477,6 +507,7 @@ function updateRelativePrice() {
     relativePriceDogTokenInCatToken.innerHTML = priceShort;
     relativePriceCatTokenInDogToken.innerHTML = priceShortInverse;
   }
+  updateAssetUsdValue();
 }
 
     
@@ -543,6 +574,7 @@ function tradeTokenAmount(user, tokenType, action, amount) {
     }
   }
   updateRelativePrice();
+
 }
   
 
@@ -574,6 +606,7 @@ function executeTradeButtonHandler(user, action) {
   }
   console.log(`Executing trade: ${user} wants to ${action} ${amount} of ${tokenType} Token`);
   tradeTokenAmount(user, tokenType, action, amount);  
+  updateAssetUsdValue();
 }
 
     
