@@ -126,7 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const activityLogList = document.getElementById('activityLogList');
   
-  
+  const quickSetupOneButton = document.getElementById('quickSetupOneButton');
+  quickSetupOneButton.addEventListener('click', quickSetupOneButtonHandler);
+  const quickSetupTwoButton = document.getElementById('quickSetupTwoButton');
+  quickSetupTwoButton.addEventListener('click', quickSetupTwoButtonHandler);
   
   initialize();
   updateRelativePrice();
@@ -135,6 +138,36 @@ document.addEventListener('DOMContentLoaded', () => {
   verbose = true;
   writeToActivityLog('Initialized.');
 });
+
+
+function quickSetupOneButtonHandler() {
+  // give everyone 10000 dogtokens and 10000 cattokens, and Carol owns 10000 dogtokens and catokens in liquidity
+  ['Alice', 'Bob', 'Carol', 'Dave'].forEach(user => {
+    document.getElementById(`${user.toLowerCase()}DogTokenBalance`).innerHTML = '10000';
+    document.getElementById(`${user.toLowerCase()}CatTokenBalance`).innerHTML = '10000';
+  });
+  liquidityDogAmountInputCarol.value = "5000";
+  liquidityCatAmountInputCarol.value = "5000";
+  depositLiquidityButtonHandler('Carol');
+  updateAssetUsdValue();  
+}
+
+function quickSetupTwoButtonHandler() {
+  // give Alice and Bob 10000 dogtokens and 10000 cattokens, then give Carol 1000000 dogtokens and cattokens, carol deposits all into liquidity poool
+  ['Alice', 'Bob'].forEach(user => {
+    document.getElementById(`${user.toLowerCase()}DogTokenBalance`).innerHTML = '10000';
+    document.getElementById(`${user.toLowerCase()}CatTokenBalance`).innerHTML = '10000';
+  }
+  );
+  ['Carol'].forEach(user => {
+    document.getElementById(`${user.toLowerCase()}DogTokenBalance`).innerHTML = '1000000';
+    document.getElementById(`${user.toLowerCase()}CatTokenBalance`).innerHTML = '1000000';
+  });
+  liquidityDogAmountInputCarol.value = "1000000";
+  liquidityCatAmountInputCarol.value = "1000000";
+  depositLiquidityButtonHandler('Carol', 1000000, 1000000);
+  updateAssetUsdValue();  
+}
 
 
 function writeToActivityLog(message) {
