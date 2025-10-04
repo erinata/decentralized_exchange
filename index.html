@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>impermanent_loss</title>
   </head>
-  <body>
+  <body class="bg-pink-50">
       <div id="app">
         <div>
           <!--  Using tailwind, make 4 cards for each of the users , equal width and in one row, each showing the name of the user,  dogtoken balances catoken balance, share of liquidity pool and total value in usd -->
           
           <div class="grid grid-cols-4 gap-4">
             <div class="overflow-auto max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200">
-              <div class="text-2xl font-bold mb-2">Alice</div>
+              <div class="text-3xl font-bold mb-2">Alice</div>
               <hr/>
+              <div class="text-xl font-bold mb-2">User Info</div>
               <div>DogToken Balance:</div>
               <div id="aliceDogTokenBalance">0</div>
               <div>CatToken Balance:</div>
@@ -23,10 +24,42 @@
               <div id="aliceShareOfLiquidityPool">0</div>
               <div>Portfolio Value in USD:</div>
               <div id="aliceTotalValueInUSD">0</div>
+              <hr/>
+              <div class="p-4">
+              <div class="text-xl font-bold mb-2">Trade Tokens</div>
+              <div class="text-right">
+              <select class="border border-gray-500" id="executeTokenSelectAlice">
+                <option value="dogToken">DogToken</option>
+                <option value="catToken">CatToken</option>
+              </select>
+              <input type="number" class="border border-gray-500" id="executeAmountInputAlice" value="1" min="1" />
+              </div>
+              </div>
+              <div class="mb-4">
+              <button id="executeTradeBuyAliceButton" type="button">Buy</button>
+              <button id="executeTradeSellAliceButton" type="button">Sell</button>
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Provide Liquidity</div>
+              <div class="text-right">
+              <label for="liquidityAmountInputAlice">DogToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityDogAmountInputAlice" placeholder="DogToken Amount"/> 
+              </div>
+              <div class="text-right">
+              <label for="liquidityAmountInputAlice">CatToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityCatAmountInputAlice" placeholder="CatToken Amount"/> 
+              </div>
+              </div>
+              <div>
+              <button id="depositLiquidityAliceButton" type="button">Deposit</button>
+              <button id="withdrawLiquidityAliceButton" type="button">Withdraw All</button>
+              </div>
             </div>
             <div class="overflow-auto max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200">
-              <div class="text-2xl font-bold mb-2">Bob</div>
-              <hr />
+              <div class="text-3xl font-bold mb-2">Bob</div>
+              <hr/>
+              <div class="text-xl font-bold mb-2">User Info</div>
               <div>DogToken Balance:</div>
               <div id="bobDogTokenBalance">0</div>
               <div>CatToken Balance:</div>
@@ -35,11 +68,48 @@
               <div id="bobShareOfLiquidityPool">0</div>
               <div>Portfolio Value in USD:</div>
               <div id="bobTotalValueInUSD">0</div>
+              <hr/>
+              <div class="p-4">
+              <div class="text-xl font-bold mb-2">Trade Tokens</div>
+              <div class="text-right">
+              <select class="border border-gray-500" id="executeTokenSelectBob">
+                <option value="dogToken">DogToken</option>
+                <option value="catToken">CatToken</option>
+              </select>
+              <input type="number" class="border border-gray-500" id="executeAmountInputBob" value="1" min="1" />
+              </div>
+              </div>
+              <div class="mb-4">
+              <button id="executeTradeBuyBobButton" type="button">Buy</button>
+              <button id="executeTradeSellBobButton" type="button">Sell</button>
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Provide Liquidity</div>
+              <div class="text-right">
+              <label for="liquidityAmountInputBob">DogToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityDogAmountInputBob" placeholder="DogToken Amount"/> 
+              </div>
+              <div class="text-right">
+              <label for="liquidityAmountInputBob">CatToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityCatAmountInputBob" placeholder="CatToken Amount"/> 
+              </div>
+              
+              </div>
+              <div>
+              <button id="depositLiquidityBobButton" type="button">Deposit</button>
+              <button id="withdrawLiquidityBobButton" type="button">Withdraw All</button>
+              </div>
+            
+            
+              
+              
             </div>
        
             <div class="overflow-auto max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200">
-              <div class="text-2xl font-bold mb-2">Carol</div>
-              <hr />
+              <div class="text-3xl font-bold mb-2">Carol</div>
+              <hr/>
+              <div class="text-xl font-bold mb-2">User Info</div>
               <div>DogToken Balance:</div>
               <div id="carolDogTokenBalance">0</div>
               <div>CatToken Balance:</div>
@@ -48,11 +118,48 @@
               <div id="carolShareOfLiquidityPool">0</div>
               <div>Portfolio Value in USD:</div>
               <div id="carolTotalValueInUSD">0</div>
+              <hr/>
+              <div class="p-4">
+              <div class="text-xl font-bold mb-2">Trade Tokens</div>
+              <div class="text-right">
+              <select class="border border-gray-500" id="executeTokenSelectCarol">
+                <option value="dogToken">DogToken</option>
+                <option value="catToken">CatToken</option>
+              </select>
+              <input type="number" class="border border-gray-500" id="executeAmountInputCarol" value="1" min="1" />
+              </div>
+              </div>
+              <div class="mb-4">
+              <button id="executeTradeBuyCarolButton" type="button">Buy</button>
+              <button id="executeTradeSellCarolButton" type="button">Sell</button>
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Provide Liquidity</div>
+              <div class="text-right">
+              <label for="liquidityAmountInputCarol">DogToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityDogAmountInputCarol" placeholder="DogToken Amount"/> 
+              </div>
+              <div class="text-right">
+              <label for="liquidityAmountInputCarol">CatToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityCatAmountInputCarol" placeholder="CatToken Amount"/> 
+              </div>
+              </div>
+              <div>
+              <button id="depositLiquidityCarolButton" type="button">Deposit</button>
+              <button id="withdrawLiquidityCarolButton" type="button">Withdraw All</button>
+              </div>
+            
+            
+              
+            
+            
             </div>
             
             <div class="overflow-auto max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200">
-              <div class="text-2xl font-bold mb-2">Dave</div>
-              <hr />
+              <div class="text-3xl font-bold mb-2">Dave</div>
+              <hr/>
+              <div class="text-xl font-bold mb-2">User Info</div>
               <div>DogToken Balance:</div>
               <div id="daveDogTokenBalance">0</div>
               <div>CatToken Balance:</div>
@@ -61,6 +168,37 @@
               <div id="daveShareOfLiquidityPool">0</div>
               <div>Portfolio Value in USD:</div>
               <div id="daveTotalValueInUSD">0</div>
+              <hr/>
+              <div class="p-4">
+              <div class="text-xl font-bold mb-2">Trade Tokens</div>
+              <div class="text-right">
+              <select class="border border-gray-500" id="executeTokenSelectDave">
+                <option value="dogToken">DogToken</option>
+                <option value="catToken">CatToken</option>
+              </select>
+              <input type="number" class="border border-gray-500" id="executeAmountInputDave" value="1" min="1" />
+              </div>
+              </div>
+              <div class="mb-4">
+              <button id="executeTradeBuyDaveButton" type="button">Buy</button>
+              <button id="executeTradeSellDaveButton" type="button">Sell</button>
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Provide Liquidity</div>
+              <div class="text-right">
+              <label for="liquidityAmountInputDave">DogToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityDogAmountInputDave" placeholder="DogToken Amount"/> 
+              </div>
+              <div class="text-right">
+              <label for="liquidityAmountInputDave">CatToken:</label>
+              <input type="number" class="border border-gray-500" id="liquidityCatAmountInputDave" placeholder="CatToken Amount"/> 
+              </div>
+              </div>
+              <div>
+              <button id="depositLiquidityDaveButton" type="button">Deposit</button>
+              <button id="withdrawLiquidityDaveButton" type="button">Withdraw All</button>
+              </div>
             </div>
             
             
@@ -83,88 +221,6 @@
 
 
           <div>
-            <span>Alice</span>
-            <label for="executeTokenSelectAlice">Token:</label>
-            <select id="executeTokenSelectAlice">
-              <option value="dogToken">DogToken</option>
-              <option value="catToken">CatToken</option>
-            </select>
-            <label for="executeAmountInputAlice">Amount:</label>
-            <input type="number" id="executeAmountInputAlice" value="1" min="1" />
-            <button id="executeTradeBuyAliceButton" type="button">Buy</button>
-            <button id="executeTradeSellAliceButton" type="button">Sell</button>
-            <br/>
-            
-            <span>Bob</span>
-            <label for="executeTokenSelectBob">Token:</label>
-            <select id="executeTokenSelectBob">
-              <option value="dogToken">DogToken</option>
-              <option value="catToken">CatToken</option>
-            </select>
-            <label for="executeAmountInputBob">Amount:</label>
-            <input type="number" id="executeAmountInputBob" value="1" min="1" />
-            <button id="executeTradeBuyBobButton" type="button">Buy</button>
-            <button id="executeTradeSellBobButton" type="button">Sell</button>
-            <br/>
-            
-            <span>Carol</span>
-            <label for="executeTokenSelectCarol">Token:</label>
-            <select id="executeTokenSelectCarol">
-              <option value="dogToken">DogToken</option>
-              <option value="catToken">CatToken</option>
-            </select>
-            <label for="executeAmountInputCarol">Amount:</label>
-            <input type="number" id="executeAmountInputCarol" value="1" min="1" />
-            <button id="executeTradeBuyCarolButton" type="button">Buy</button>
-            <button id="executeTradeSellCarolButton" type="button">Sell</button>
-            <br/>
-            
-            <span>Dave</span>
-            <label for="executeTokenSelectDave">Token:</label>
-            <select id="executeTokenSelectDave">
-              <option value="dogToken">DogToken</option>
-              <option value="catToken">CatToken</option>
-            </select>
-            <label for="executeAmountInputDave">Amount:</label>
-            <input type="number" id="executeAmountInputDave" value="1" min="1" />
-            <button id="executeTradeBuyDaveButton" type="button">Buy</button>
-            <button id="executeTradeSellDaveButton" type="button">Sell</button>
-            <br/>
-            
-            
-            
-            
-
-            
-            <label for="liquidityAmountInputAlice">Amount:</label>
-            <input type="number" id="liquidityDogAmountInputAlice"/> DogToken
-            <input type="number" id="liquidityCatAmountInputAlice"/> CatToken
-            <button id="depositLiquidityAliceButton" type="button">Deposit Liquidity</button>
-            <button id="withdrawLiquidityAliceButton" type="button">Withdraw All Liquidity</button>
-            <br/>
-            
-            <label for="liquidityAmountInputBob">Amount:</label>
-            <input type="number" id="liquidityDogAmountInputBob"/> DogToken
-            <input type="number" id="liquidityCatAmountInputBob"/> CatToken
-            <button id="depositLiquidityBobButton" type="button">Deposit Liquidity</button>
-            <button id="withdrawLiquidityBobButton" type="button">Withdraw All Liquidity</button>
-            <br/>
-            
-            <label for="liquidityAmountInputCarol">Amount:</label>
-            <input type="number" id="liquidityDogAmountInputCarol"/> DogToken
-            <input type="number" id="liquidityCatAmountInputCarol"/> CatToken
-            <button id="depositLiquidityCarolButton" type="button">Deposit Liquidity</button>
-            <button id="withdrawLiquidityCarolButton" type="button">Withdraw All Liquidity</button>
-            <br/>
-            
-            <label for="liquidityAmountInputDave">Amount:</label>
-            <input type="number" id="liquidityDogAmountInputDave"/> DogToken
-            <input type="number" id="liquidityCatAmountInputDave"/> CatToken
-            <button id="depositLiquidityDaveButton" type="button">Deposit Liquidity</button>
-            <button id="withdrawLiquidityDaveButton" type="button">Withdraw All Liquidity</button>
-            <br/>
-
-            
             
             
             <!-- button for coinbase arbitrage kicks in -->
