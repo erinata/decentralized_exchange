@@ -122,13 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const airdropButton = document.getElementById('airdropButton');
   airdropButton.addEventListener('click', airdropButtonHandler);
   
+  const activityLogList = document.getElementById('activityLogList');
   
   
   initialize();
   updateRelativePrice();
   updateAssetUsdValue();
+  
+  writeToActivityLog('Initialized.');
 });
 
+
+function writeToActivityLog(message) {
+  const activityLogList = document.getElementById('activityLogList');
+  const listItem = document.createElement('li');
+  listItem.textContent = `${message}`;
+  activityLogList.prepend(listItem);
+}
 
 function updateAssetUsdValue() {
   const coinbaseDogPrice = parseFloat(coinbaseDogTokenPriceInput.value);

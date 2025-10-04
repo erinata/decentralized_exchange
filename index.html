@@ -35,7 +35,7 @@
     </nav>
     
       <div id="app">
-        <div>
+        <div  class="my-20">
           <div class="grid grid-cols-5 gap-4">
           <div>
             
@@ -43,7 +43,7 @@
                 <div class="text-3xl font-bold mb-2">Activity Log</div>
                 <hr/>
                 <!-- Activity log entries will be appended here -->
-                <ul id="activityLogList" class="list-disc list-inside">
+                <ul id="activityLogList" class="list-disc list-inside text-left">
                 </ul>
               </div>
           
@@ -92,18 +92,22 @@
               <hr/>
               <div class="m-4">
               <div class="text-xl font-bold mb-2">Provide Liquidity</div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputAlice">DogToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityDogAmountInputAlice" placeholder="DogToken Amount"/> 
               </div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputAlice">CatToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityCatAmountInputAlice" placeholder="CatToken Amount"/> 
               </div>
-              </div>
               <div>
               <button id="depositLiquidityAliceButton" type="button">Deposit</button>
-              <button id="withdrawLiquidityAliceButton" type="button">Withdraw All</button>
+              </div>
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Withdraw Liquidity</div>
+                <button id="withdrawLiquidityAliceButton" type="button">Withdraw All</button>
               </div>
             </div>
             <div class="overflow-auto max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200">
@@ -149,22 +153,23 @@
               <hr/>
               <div class="m-4">
               <div class="text-xl font-bold mb-2">Provide Liquidity</div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputBob">DogToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityDogAmountInputBob" placeholder="DogToken Amount"/> 
               </div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputBob">CatToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityCatAmountInputBob" placeholder="CatToken Amount"/> 
               </div>
-              
-              </div>
               <div>
               <button id="depositLiquidityBobButton" type="button">Deposit</button>
-              <button id="withdrawLiquidityBobButton" type="button">Withdraw All</button>
               </div>
-            
-            
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Withdraw Liquidity</div>
+                <button id="withdrawLiquidityBobButton" type="button">Withdraw All</button>
+              </div>
               
               
             </div>
@@ -212,22 +217,23 @@
               <hr/>
               <div class="m-4">
               <div class="text-xl font-bold mb-2">Provide Liquidity</div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputCarol">DogToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityDogAmountInputCarol" placeholder="DogToken Amount"/> 
               </div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputCarol">CatToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityCatAmountInputCarol" placeholder="CatToken Amount"/> 
               </div>
-              </div>
               <div>
               <button id="depositLiquidityCarolButton" type="button">Deposit</button>
-              <button id="withdrawLiquidityCarolButton" type="button">Withdraw All</button>
               </div>
-            
-            
-              
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Withdraw Liquidity</div>
+                <button id="withdrawLiquidityCarolButton" type="button">Withdraw All</button>
+              </div>
             
             
             </div>
@@ -275,19 +281,31 @@
               <hr/>
               <div class="m-4">
               <div class="text-xl font-bold mb-2">Provide Liquidity</div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputDave">DogToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityDogAmountInputDave" placeholder="DogToken Amount"/> 
               </div>
-              <div class="text-right">
+              <div class="text-right m-2">
               <label for="liquidityAmountInputDave">CatToken:</label>
               <input type="number" class="border border-gray-500" id="liquidityCatAmountInputDave" placeholder="CatToken Amount"/> 
               </div>
-              </div>
               <div>
               <button id="depositLiquidityDaveButton" type="button">Deposit</button>
-              <button id="withdrawLiquidityDaveButton" type="button">Withdraw All</button>
               </div>
+              </div>
+              <hr/>
+              <div class="m-4">
+              <div class="text-xl font-bold mb-2">Withdraw Liquidity</div>
+                <button id="withdrawLiquidityDaveButton" type="button">Withdraw All</button>
+              </div>
+            
+            
+            
+            
+                
+                
+                
+                
             </div>
             
             
@@ -295,6 +313,7 @@
             <div class="overflow-auto p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200 col-span-4">
               <div class="text-3xl font-bold mb-2">Decentralized Exchange (DEX)</div>
               <hr/>
+              <div class="text-xl font-bold mb-2">Dex Info</div>
               <div>Dex Contract DogToken Balance: <span id="dexDogTokenBalance">0</span></div>
               <div>Dex Contract CatToken Balance: <span id="dexCatTokenBalance">0</span></div>
               <div>Relative Price of DogToken in CatToken: <span id="relativePriceDogTokenInCatToken">1</span></div>
@@ -304,22 +323,33 @@
             <div class="overflow-auto p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200 col-span-4">
               <div class="text-3xl font-bold mb-2">Outside World</div>
               <hr/>
+              
+              <div class="text-xl font-bold mb-2">Coinbase</div>
+              <div class="m-2">
+              <label for="coinbaseDogTokenPriceInput">DogToken Price in USD:</label>
+              <input type="number" class="border mx-4" id="coinbaseDogTokenPriceInput" value="1" min="0.01" step="0.01"/>
+              </div>
+              <div class="m-2">       
+              <label for="coinbaseCatTokenPriceInput">CatToken Price in USD:</label>
+              <input type="number" class="border mx-4" id="coinbaseCatTokenPriceInput" value="1" min="0.01" step="0.01"/>
+              </div>
+              <div class="m-2">
+              
               <!-- button for coinbase arbitrage kicks in -->
-              <button id="coinbaseArbitrageButton" type="button">Coinbase Arbitrage (Infinite Steps)</button>
+              <button id="coinbaseArbitrageButton" type="button">Arbitrage (Trade until no arbitrage opportunity)</button>
+              </div>
+              <div class="m-2">
               <!-- button for coinbase arbitrage just one step -->
-              <button id="coinbaseArbitrageOneStepButton" type="button">Coinbase Arbitrage (One Step)</button>
-              <br/>
-              <!-- inputbox for coinbase dogtoken price in usd  -->
-              <label for="coinbaseDogTokenPriceInput">Coinbase DogToken Price in USD:</label>
-              <input type="number" id="coinbaseDogTokenPriceInput" value="1" min="0.01" step="0.01"/>
-              <label for="coinbaseCatTokenPriceInput">Coinbase CatToken Price in USD:</label>
-              <input type="number" id="coinbaseCatTokenPriceInput" value="1" min="0.01" step="0.01"/>
+              <button id="coinbaseArbitrageOneStepButton" type="button"> Arbitrage (Trade once)</button>
+              </div>
+              
               
           </div>
           <div class="overflow-auto p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-200 col-span-4">
               <div class="text-3xl font-bold mb-2">God Mode</div>
               <hr/>
-              <label for="airdropUserSelect">Airdrop User:</label>
+              <div class="m-2">
+              <label for="airdropUserSelect">To User:</label>
               <select id="airdropUserSelect">
                 <option value="alice">Alice</option>
                 <option value="bob">Bob</option>
@@ -327,17 +357,21 @@
                 <option value="dave">Dave</option>
                 <option value="all">All</option>
               </select>
-              
-              <label for="airdropTokenSelect">Airdrop Token:</label>
+              </div>
+              <div class="m-2">
+              <label for="airdropTokenSelect">Token:</label>
               <select id="airdropTokenSelect">
                 <option value="dogToken">DogToken</option>
                 <option value="catToken">CatToken</option>
               </select>
-              
-              <label for="airdropAmountInput">Airdrop Amount:</label>
-              <input type="number" id="airdropAmountInput"/>
+              </div>
+              <div class="m-2">
+              <label for="airdropAmountInput">Amount:</label>
+              <input type="number" class="border" id="airdropAmountInput"/>
+              </div>
+              <div class="m-2">
               <button id="airdropButton" type="button">Airdrop Tokens</button>
-            
+              </div>
           </div>
 
           
