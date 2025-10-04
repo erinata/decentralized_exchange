@@ -4,6 +4,8 @@ import './style.css'
 
 // DOM ready 
 
+var verbose = false;
+
 document.addEventListener('DOMContentLoaded', () => {
   // Your code to run since DOM is loaded and ready
   console.log('DOM fully loaded and parsed');
@@ -125,19 +127,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const activityLogList = document.getElementById('activityLogList');
   
   
+  
   initialize();
   updateRelativePrice();
   updateAssetUsdValue();
   
+  verbose = true;
   writeToActivityLog('Initialized.');
 });
 
 
 function writeToActivityLog(message) {
-  const activityLogList = document.getElementById('activityLogList');
-  const listItem = document.createElement('li');
-  listItem.textContent = `${message}`;
-  activityLogList.prepend(listItem);
+  if (verbose) {
+    const activityLogList = document.getElementById('activityLogList');
+    const listItem = document.createElement('li');
+    listItem.textContent = `${message}`;
+    activityLogList.append(listItem);
+    
+    // remove oldest log entry if more than 50 entries
+    if (activityLogList.children.length > 20) {
+      activityLogList.removeChild(activityLogList.children[0]);
+    }
+  }
 }
 
 function updateAssetUsdValue() {
@@ -145,6 +156,7 @@ function updateAssetUsdValue() {
   const coinbaseCatPrice = parseFloat(coinbaseCatTokenPriceInput.value);
   const users = ['alice', 'bob', 'carol', 'dave'];
   users.forEach(user => {
+    const originalAssetValue = document.getElementById(`${user}TotalValueInUSD`).innerHTML;
     const userDogBalance = parseFloat(document.getElementById(`${user}DogTokenBalance`).innerHTML);
     const userCatBalance = parseFloat(document.getElementById(`${user}CatTokenBalance`).innerHTML);
     // calculate the value of liquidity pool share
@@ -154,7 +166,11 @@ function updateAssetUsdValue() {
     const userLiquidityValueInUSD = (userShareOfLiquidityPool / 100) * ((dexDogBalance * coinbaseDogPrice) + (dexCatBalance * coinbaseCatPrice));
     const totalValueInUSD = (userDogBalance * coinbaseDogPrice) + (userCatBalance * coinbaseCatPrice) + userLiquidityValueInUSD;
     document.getElementById(`${user}TotalValueInUSD`).innerHTML = `$${cleanUpNumbers(totalValueInUSD,2)}`;
+    if (originalAssetValue !== `$${cleanUpNumbers(totalValueInUSD,2)}` && originalAssetValue !== 'N/A') {
+      writeToActivityLog(`${user.charAt(0).toUpperCase() + user.slice(1)}'s total asset value updated from ${originalAssetValue} to $${cleanUpNumbers(totalValueInUSD,2)} USD.`);   
+    }
   });
+
 }
 
     
@@ -177,7 +193,6 @@ function airdropToUser(user) {
       alert('Please enter a valid amount greater than 0.');
       return;
     }
-    console.log(`Airdropping ${amount} of ${tokenType} Token to ${user}`);
     // lowercase user for element IDs
     const userLower = user.toLowerCase();
     const userDogBalance = parseFloat(document.getElementById(`${userLower}DogTokenBalance`).innerHTML);
@@ -187,6 +202,8 @@ function airdropToUser(user) {
     } else if (tokenType === 'catToken') {
       document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + amount);
     }
+    
+    writeToActivityLog(`Airdropping ${amount} ${tokenType === 'dogToken' ? 'Dog' : 'Cat'} Tokens to ${user}.`);
     
 }
   
@@ -324,42 +341,53 @@ function depositLiquidityButtonHandler (user) {
     document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance - dogTokenAmount);
     document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance - catTokenAmount);
     updateRelativePrice();
+    // clear input fields
+    document.getElementById(`liquidityDogAmountInput${user}`).value = '';
+    document.getElementById(`liquidityCatAmountInput${user}`).value = '';
     return;
   }
-  
-  // Calculate the share of the liquidity pool to be given to the user and update liquidity share for all users
-  const liquidityAdded = dogTokenAmount + catTokenAmount;
-  const userNewShare = (liquidityAdded / (dexTotalLiquidity + liquidityAdded)) * 100;
-  document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(userShareOfLiquidityPool + userNewShare);
-  //  update other users' share of liquidity pool
-  
-  const users = ['alice', 'bob', 'carol', 'dave'];
-  users.forEach(u => {
-    if (u !== userLower) {
-      const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
-      const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / (dexTotalLiquidity + liquidityAdded);
-      if (otherUserNewShare < 0) {
-        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '0';
-      } else if (otherUserNewShare > 100) {
-        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = '100';
-      } else {
-        document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
-      }
-    }
-  });
-    
-  
   
   // Update user balances
   document.getElementById(`${userLower}DogTokenBalance`).innerHTML = cleanUpNumbers(userDogBalance - dogTokenAmount);
   document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance - catTokenAmount);
+  
+  const originalBalanceOnLiquidityPool = (dexDogBalance + dexCatBalance)*userShareOfLiquidityPool/100;
+  const newBalanceOnLiquidityPool = originalBalanceOnLiquidityPool + dogTokenAmount + catTokenAmount;
+  const newTotalLiquidity = dexTotalLiquidity + dogTokenAmount + catTokenAmount;
+  const newShareOfLiquidityPool = (newBalanceOnLiquidityPool / newTotalLiquidity) * 100;
+  document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(newShareOfLiquidityPool);
+  
+  // Update other users' share of liquidity pool
+  const users = ['alice', 'bob', 'carol', 'dave'];
+  users.forEach(u => {
+    if (u !== userLower) {
+      const otherUserShare = parseFloat(document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML);
+      const otherUserNewShare = (otherUserShare * dexTotalLiquidity) / newTotalLiquidity;
+      document.getElementById(`${u}ShareOfLiquidityPool`).innerHTML = cleanUpNumbers(otherUserNewShare);
+    }
+  });
+  
+  
+  
+  
+  
+  
+  
+  
   // Update DEX balances
   dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + dogTokenAmount);
   dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + catTokenAmount);
   
+  
+  
+
+
+  
   updateRelativePrice();
   
-  
+  // clear input fields
+  document.getElementById(`liquidityDogAmountInput${user}`).value = '';
+  document.getElementById(`liquidityCatAmountInput${user}`).value = '';
   
 }
 
@@ -523,6 +551,7 @@ function updateRelativePrice() {
     
 
 function tradeTokenAmount(user, tokenType, action, amount) {
+  
   // lowercase user for element IDs
   user = user.toLowerCase();
   const userDogBalance = parseFloat(document.getElementById(`${user}DogTokenBalance`).innerHTML);
@@ -583,7 +612,10 @@ function tradeTokenAmount(user, tokenType, action, amount) {
       dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + dogTokensNeeded);
     }
   }
+  
+  writeToActivityLog(`${user} ${action} ${amount} ${tokenType === 'dogToken' ? 'Dog' : 'Cat'} Tokens.`);
   updateRelativePrice();
+  
 
 }
   
