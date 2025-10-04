@@ -139,6 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function writeToActivityLog(message) {
   if (verbose) {
+    // round down all numbers found in the message to 6 decimal places
+    // message = message.replace(/(\d+\.\d{6})\d+/g, '$1');
+    
     const activityLogList = document.getElementById('activityLogList');
     const listItem = document.createElement('li');
     listItem.textContent = `${message}`;
@@ -279,6 +282,7 @@ function coinbaseArbitrageButtonHandler(remainingSteps = Infinity) {
   } else {
     console.log('No arbitrage opportunity found');
   }
+  writeToActivityLog('Arbitrage executed.');
   updateAssetUsdValue();
 }
 
@@ -368,15 +372,13 @@ function depositLiquidityButtonHandler (user) {
   });
   
   
-  
-  
-  
-  
-  
-  
+  // write to activity log the update of dex balances
+  writeToActivityLog(`Dex dog token balance: ${dexDogBalance} -> ${dexDogBalance + dogTokenAmount}`);
+  writeToActivityLog(`Dex cat token balance: ${dexCatBalance} -> ${dexCatBalance + catTokenAmount}`);
   // Update DEX balances
   dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance + dogTokenAmount);
   dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance + catTokenAmount);
+  
   
   
   
@@ -416,6 +418,8 @@ function withdrawLiquidityButtonHandler (user) {
   document.getElementById(`${userLower}CatTokenBalance`).innerHTML = cleanUpNumbers(userCatBalance + catTokensToWithdraw);
   
   // Update DEX balances
+  writeToActivityLog(`Dex dog token balance: ${dexDogBalance} -> ${dexDogBalance - dogTokensToWithdraw}`);
+  writeToActivityLog(`Dex cat token balance: ${dexCatBalance} -> ${dexCatBalance - catTokensToWithdraw}`);
   dexDogTokenBalance.innerHTML = cleanUpNumbers(dexDogBalance - dogTokensToWithdraw);
   dexCatTokenBalance.innerHTML = cleanUpNumbers(dexCatBalance - catTokensToWithdraw);
   
@@ -545,13 +549,19 @@ function updateRelativePrice() {
   const dexDogBalance = parseFloat(dexDogTokenBalance.innerHTML);
   const dexCatBalance = parseFloat(dexCatTokenBalance.innerHTML);
   
-  if (dexDogBalance === 0 && dexCatBalance === 0) {
+  if (dexDogBalance === 0 && dexCatBalance === 0) {    
+    writeToActivityLog(`Relative price updated: 1 Dog Token = ${relativePriceDogTokenInCatToken.innerHTML} Cat Tokens -> N/A`);
+    writeToActivityLog(`Relative price updated: 1 Cat Token = ${relativePriceCatTokenInDogToken.innerHTML} Dog Tokens -> N/A`);
     relativePriceDogTokenInCatToken.innerHTML = 'N/A';
     relativePriceCatTokenInDogToken.innerHTML = 'N/A';
   } else if (dexDogBalance === 0) {
+    writeToActivityLog(`Relative price updated: 1 Dog Token = ${relativePriceDogTokenInCatToken.innerHTML} Cat Tokens -> Infinity Cat Tokens`);
+    writeToActivityLog(`Relative price updated: 1 Cat Token = ${relativePriceCatTokenInDogToken.innerHTML} Dog Tokens -> 0 Dog Tokens`);
     relativePriceDogTokenInCatToken.innerHTML = 'Infinity';
     relativePriceCatTokenInDogToken.innerHTML = '0';
   } else if (dexCatBalance === 0) {
+    writeToActivityLog(`Relative price updated: 1 Dog Token = ${relativePriceDogTokenInCatToken.innerHTML} Cat Tokens -> Infinity Cat Tokens`);
+    writeToActivityLog(`Relative price updated: 1 Cat Token = ${relativePriceCatTokenInDogToken.innerHTML} Dog Tokens -> 0 Dog Tokens`);
     relativePriceDogTokenInCatToken.innerHTML = '0';
     relativePriceCatTokenInDogToken.innerHTML = 'Infinity';
   } else {
@@ -559,10 +569,12 @@ function updateRelativePrice() {
     // remove trailing zeros 
     const priceShort = cleanUpNumbers(price);
     const priceShortInverse = cleanUpNumbers(1 / price);
-    
+    writeToActivityLog(`Relative price updated: 1 Dog Token = ${relativePriceDogTokenInCatToken.innerHTML} Cat Tokens -> ${priceShort} Cat Tokens`);
+    writeToActivityLog(`Relative price updated: 1 Cat Token = ${relativePriceCatTokenInDogToken.innerHTML} Dog Tokens -> ${priceShortInverse} Dog Tokens`);
     relativePriceDogTokenInCatToken.innerHTML = priceShort;
     relativePriceCatTokenInDogToken.innerHTML = priceShortInverse;
   }
+  
   updateAssetUsdValue();
 }
 
