@@ -62,21 +62,49 @@ document.addEventListener('DOMContentLoaded', () => {
   
   
   
+  // const liquidityUserSelect = document.getElementById('liquidityUserSelect');
+  
+  const liquidityCatAmountInputAlice = document.getElementById('liquidityCatAmountInputAlice');
+  const liquidityDogAmountInputAlice = document.getElementById('liquidityDogAmountInputAlice');
+  liquidityDogAmountInputAlice.addEventListener('input', (event) => liquidityDogAmountInputHandler(event,'Alice'));
+  liquidityCatAmountInputAlice.addEventListener('input', (event) => liquidityCatAmountInputHandler(event,'Alice'));
+  const depositLiquidityAliceButton = document.getElementById('depositLiquidityAliceButton');
+  const withdrawLiquidityAliceButton = document.getElementById('withdrawLiquidityAliceButton');
+  depositLiquidityAliceButton.addEventListener('click', () => depositLiquidityButtonHandler('Alice'));
+  withdrawLiquidityAliceButton.addEventListener('click', () => withdrawLiquidityButtonHandler('Alice'));
+  
+  const liquidityCatAmountInputBob = document.getElementById('liquidityCatAmountInputBob');
+  const liquidityDogAmountInputBob = document.getElementById('liquidityDogAmountInputBob');
+  liquidityDogAmountInputBob.addEventListener('input', (event) => liquidityDogAmountInputHandler(event,'Bob'));
+  liquidityCatAmountInputBob.addEventListener('input', (event) => liquidityCatAmountInputHandler(event,'Bob'));
+  const depositLiquidityBobButton = document.getElementById('depositLiquidityBobButton');
+  const withdrawLiquidityBobButton = document.getElementById('withdrawLiquidityBobButton');
+  depositLiquidityBobButton.addEventListener('click', () => depositLiquidityButtonHandler('Bob'));
+  withdrawLiquidityBobButton.addEventListener('click', () => withdrawLiquidityButtonHandler('Bob'));
+  
+  const liquidityCatAmountInputCarol = document.getElementById('liquidityCatAmountInputCarol');
+  const liquidityDogAmountInputCarol = document.getElementById('liquidityDogAmountInputCarol');
+  liquidityDogAmountInputCarol.addEventListener('input', (event) => liquidityDogAmountInputHandler(event,'Carol'));
+  liquidityCatAmountInputCarol.addEventListener('input', (event) => liquidityCatAmountInputHandler(event,'Carol'));
+  const depositLiquidityCarolButton = document.getElementById('depositLiquidityCarolButton');
+  const withdrawLiquidityCarolButton = document.getElementById('withdrawLiquidityCarolButton');
+  depositLiquidityCarolButton.addEventListener('click', () => depositLiquidityButtonHandler('Carol'));
+  withdrawLiquidityCarolButton.addEventListener('click', () => withdrawLiquidityButtonHandler('Carol'));
+  
+  const liquidityCatAmountInputDave = document.getElementById('liquidityCatAmountInputDave');
+  const liquidityDogAmountInputDave = document.getElementById('liquidityDogAmountInputDave');
+  liquidityDogAmountInputDave.addEventListener('input', (event) => liquidityDogAmountInputHandler(event,'Dave'));
+  liquidityCatAmountInputDave.addEventListener('input', (event) => liquidityCatAmountInputHandler(event,'Dave'));
+  const depositLiquidityDaveButton = document.getElementById('depositLiquidityDaveButton');
+  const withdrawLiquidityDaveButton = document.getElementById('withdrawLiquidityDaveButton');
+  depositLiquidityDaveButton.addEventListener('click', () => depositLiquidityButtonHandler('Dave'));
+  withdrawLiquidityDaveButton.addEventListener('click', () => withdrawLiquidityButtonHandler('Dave'));
   
   
-  const liquidityCatAmountInput = document.getElementById('liquidityCatAmountInput');
-  const liquidityDogAmountInput = document.getElementById('liquidityDogAmountInput');
-  // add event listener to repond to liquidityAmountInput value changes
-  liquidityDogAmountInput.addEventListener('input', (event) => liquidityDogAmountInputHandler(event));
-  liquidityCatAmountInput.addEventListener('input', (event) => liquidityCatAmountInputHandler(event));
+    
+    
   
-  const liquidityUserSelect = document.getElementById('liquidityUserSelect');
   
-  const depositLiquidityButton = document.getElementById('depositLiquidityButton');
-  const withdrawLiquidityButton = document.getElementById('withdrawLiquidityButton');
-  
-  depositLiquidityButton.addEventListener('click', depositLiquidityButtonHandler);
-  withdrawLiquidityButton.addEventListener('click', withdrawLiquidityButtonHandler);
   
   const coinbaseArbitrageButton = document.getElementById('coinbaseArbitrageButton');
   coinbaseArbitrageButton.addEventListener('click', () => coinbaseArbitrageButtonHandler());
@@ -99,9 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function airdropButtonHandler() {
-  const user = airdropUserSelect.value;
-  const users = user === 'all' ? ['Alice', 'Bob', 'Carol', 'Dave'] : [user];
-  users.forEach(u => airdropToUser(u));
+    const user = airdropUserSelect.value;
+    const users = user === 'all' ? ['Alice', 'Bob', 'Carol', 'Dave'] : [user];
+    users.forEach(u => airdropToUser(u));
 }
 
 function airdropToUser(user) {
@@ -206,10 +234,12 @@ function coinbaseArbitrageButtonHandler(remainingSteps = Infinity) {
 
 
 
-function depositLiquidityButtonHandler () {
+function depositLiquidityButtonHandler (user) {
   
   // get the user from the liquidityUserSelect
-  const user = liquidityUserSelect.value;
+  // const user = liquidityUserSelect.value;
+  const liquidityDogAmountInput = document.getElementById(`liquidityDogAmountInput${user}`);
+  const liquidityCatAmountInput = document.getElementById(`liquidityCatAmountInput${user}`);
   const dogTokenAmount = parseFloat(liquidityDogAmountInput.value);
   const catTokenAmount = parseFloat(liquidityCatAmountInput.value);
   if (isNaN(dogTokenAmount) || dogTokenAmount <= 0 || isNaN(catTokenAmount) || catTokenAmount <= 0) {
@@ -293,9 +323,9 @@ function depositLiquidityButtonHandler () {
   
 }
 
-function withdrawLiquidityButtonHandler () {
+function withdrawLiquidityButtonHandler (user) {
   // get the user from the liquidityUserSelect
-  const user = liquidityUserSelect.value;
+  // const user = liquidityUserSelect.value;
   const userLower = user.toLowerCase();
   const userShareOfLiquidityPool = parseFloat(document.getElementById(`${userLower}ShareOfLiquidityPool`).innerHTML);
   if (userShareOfLiquidityPool <= 0) {
@@ -349,7 +379,7 @@ function withdrawLiquidityButtonHandler () {
 
 
 
-function liquidityDogAmountInputHandler(event) {
+function liquidityDogAmountInputHandler(event, user) {
   const value = event.target.value;
   if (isNaN(value) || value <= 0) {
     event.target.value = '';
@@ -366,15 +396,15 @@ function liquidityDogAmountInputHandler(event) {
       return;
     } else {
       const catTokenAmount = (dogTokenAmount * dexCatBalance) / dexDogBalance;
-      // liquidityDogAmountInput.value = cleanUpNumbers(dogTokenAmount);
-      liquidityCatAmountInput.value = cleanUpNumbers(catTokenAmount);
+      document.getElementById(`liquidityCatAmountInput${user}`).value = cleanUpNumbers(catTokenAmount);
+      // liquidityCatAmountInput.value = cleanUpNumbers(catTokenAmount);
     }
     
   }
   
 }
 
-function liquidityCatAmountInputHandler(event) {
+function liquidityCatAmountInputHandler(event, user) {
   const value = event.target.value;
   if (isNaN(value) || value <= 0) {
     event.target.value = '';
@@ -391,8 +421,7 @@ function liquidityCatAmountInputHandler(event) {
       return;
     } else {
       const dogTokenAmount = (catTokenAmount * dexDogBalance) / dexCatBalance;
-      // liquidityCatAmountInput.value = cleanUpNumbers(catTokenAmount);
-      liquidityDogAmountInput.value = cleanUpNumbers(dogTokenAmount);
+      document.getElementById(`liquidityDogAmountInput${user}`).value = cleanUpNumbers(dogTokenAmount);
     }
   } 
 }
