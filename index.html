@@ -40,7 +40,16 @@
           <div>
               
               <div id="activityLog" class="overflow-auto h-full p-4 bg-pink-50 border border-pink-200 rounded-lg shadow">
-                <div class="text-3xl font-bold mb-2">Activity Log</div>
+                <div>
+                <span class="text-3xl font-bold mb-2">Activity Log</span>
+                <!-- add a toggle on off for activity log -->
+                <label class="inline-flex items-center mb-2 mx-4">
+                  <input type="checkbox" id="activityLogToggle" class="form-checkbox h-5 w-5 text-pink-600">
+                  <span class="ml-2 text-gray-700">Enable</span>
+                </label>
+                </div>
+                
+                
                 <hr/>
                 <!-- Activity log entries will be appended here -->
                 <ul id="activityLogList" class="list-disc list-inside text-left">

@@ -4,7 +4,6 @@ import './style.css'
 
 // DOM ready 
 
-var verbose = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Your code to run since DOM is loaded and ready
@@ -131,11 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const quickSetupTwoButton = document.getElementById('quickSetupTwoButton');
   quickSetupTwoButton.addEventListener('click', quickSetupTwoButtonHandler);
   
+  const activityLogToggle = document.getElementById('activityLogToggle');
+  
   initialize();
   updateRelativePrice();
   updateAssetUsdValue();
-  
-  verbose = true;
+
   writeToActivityLog('Initialized.');
 });
 
@@ -171,7 +171,10 @@ function quickSetupTwoButtonHandler() {
 
 
 function writeToActivityLog(message) {
-  if (verbose) {
+  // check if activityLogToggle is checked
+  // const activityLogToggle = document.getElementById('activityLogToggle');
+  const toggle_on = activityLogToggle.checked;
+  if (toggle_on) {
     // round down all numbers found in the message to 6 decimal places
     // message = message.replace(/(\d+\.\d{6})\d+/g, '$1');
     
