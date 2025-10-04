@@ -75,13 +75,26 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  min-width: 8em;
+
 }
 button:hover {
-  border-color: #646cff;
+/*  border-color: #ff3333;*/
+  background-color: #ffdddd;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+
+input {
+  border-radius: 8px;
+  border: 1px solid #aa7777;
+  font-family: inherit;
+  background-color: #ffeeee;
+  color: #000000;
+  transition: border-color 0.25s, background-color 0.25s;
 }
 
 @media (prefers-color-scheme: light) {
